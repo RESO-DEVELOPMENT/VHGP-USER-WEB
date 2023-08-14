@@ -1,0 +1,106 @@
+.shop .category {
+    padding: 30px;
+    height: 90vh;
+}
+.chead h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+.chead h1:nth-child(2) {
+    opacity: 0.5;
+    border-left: 3px solid rgba(0, 0, 0, 0.5);
+    padding-left: 70px;
+}
+.shop .category .box {
+    background-color: #f6f9fc;
+    margin: 15px 0;
+    padding: 5px 10px;
+    transition: 0.5s;
+    border-radius: 5px;
+    -webkit-transition: 0.5s all;
+}
+.shop .category img {
+    width: auto;
+    height: auto;
+}
+.shop .category .box:hover {
+    background-color: #ffe1e6;
+    box-shadow: rgb(43 52 69 / 20%) 0px 4px 16px;
+}
+.shop .box2 {
+    margin-top: 100px !important;
+    text-align: center;
+}
+.shop .category button {
+    padding: 10px;
+    background: none;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.shop .contentWidth {
+    margin-left: 20px;
+}
+
+.grid5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 0px;
+}
+.shop .product img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.shop .product {
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+}
+.shop .product:hover {
+    box-shadow: rgb(43 52 69 / 15%) 0px 4px 16px;
+}
+.isSelected {
+    background-color: #e94560 !important;
+    color: #ffffff;
+}
+
+.product-list-info {
+    display: flex;
+}
+
+.shop-item {
+    width: 100px;
+    height: 100px;
+}
+.shop-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+.shop-item-wrapper {
+    gap: 15px;
+    align-items: flex-start;
+    border-bottom: 1px solid rgb(230, 230, 230);
+    width: 100%;
+    padding: 15px 0px;
+}
+.shop-item-image {
+    width: 125px;
+    padding: 0px !important;
+}
+.shop-item-title {
+    font-size: 15px;
+    font-weight: 700;
+}
+.shop-item-building {
+    font-size: 14px;
+    font-weight: 500;
+    /* color: rgb(100, 100, 100); */
+}
+.shop-item-category {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(100, 100, 100);
+}
