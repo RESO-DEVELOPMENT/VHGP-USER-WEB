@@ -79,7 +79,7 @@ const Cart = ({}) => {
   const [isLoadingWhite, setisLoadingWhite] = useState(true);
   const [isValidPhoneRegex, setIsValidPhoneRegex] = useState(true);
   const [storeName, setStoreName] = useState("");
-  const [service, setService] = useState("2");
+  const [service, setService] = useState("1");
   const [deliveryDateCart, setDeliveryDate] = useState("");
   // const [isLoading, setIsLoading] = useState(true);
   const [paymentType, setPaymentType] = useState(0);
@@ -87,6 +87,7 @@ const Cart = ({}) => {
   const [isValidApartment, setIsValidApartment] = useState(false);
   const [note, setNote] = useState("");
   const [shipCost, setShipCost] = useState(0);
+
   let date = new Date();
   let location = useLocation();
   useEffect(() => {
@@ -882,7 +883,7 @@ const Cart = ({}) => {
             {" " +
               (
                 totalPrice +
-                10000 +
+                shipCost +
                 (service === "1" ? 10000 : 0)
               ).toLocaleString()}
             <span style={{ fontSize: "15px" }}>{"₫"}</span>
@@ -1206,19 +1207,13 @@ const Cart = ({}) => {
                     >
                       <div style={{ marginRight: 10 }}>
                         <input
+                          checked={true}
                           type="checkbox"
                           className="myinput"
                           id="service"
                           name="service"
                           value={service}
                           // checked={service === 1}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setService("1");
-                            } else {
-                              setService("2");
-                            }
-                          }}
                         />
                       </div>
 
@@ -1311,7 +1306,7 @@ const Cart = ({}) => {
                 </div>
                 <div className="c_flex">
                   <span style={{ fontSize: mobileMode ? 14 : 16 }}>
-                    Phí dịch vụ
+                    Phí dịch vụ hỏa tốc
                   </span>
                   <span
                     style={{

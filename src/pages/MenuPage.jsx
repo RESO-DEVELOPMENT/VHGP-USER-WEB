@@ -79,7 +79,7 @@ export const MenuPage = () => {
     if (mode === "1") {
       if (!isLoadigFromHome) {
         setIsLoadingMode2(false);
-        setSlideData(Mdata2);                                                                                           
+        setSlideData(Mdata2);
         setIsLoadingProduct(true);
         setIsLoadingPage(true);
         getMenuByModeId(mode);
