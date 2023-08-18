@@ -382,6 +382,7 @@ const Cart = ({}) => {
         },
       ],
     };
+    console.log(order);
     postOrder(order)
       .then((res) => {
         if (res.data) {
@@ -392,26 +393,26 @@ const Cart = ({}) => {
             setOpentModalError(true);
             setisLoadingOrder(false);
           } else {
-            let orderId = "";
-            if (res.data.data) {
-              const { id } = res.data.data;
-              orderId = id;
+            // let orderId = "";
+            // if (res.data.data) {
+            // const { id } = res.data.data;
+            // orderId = id;
 
-              const newOrder = res.data.data;
-              if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_ORDER))) {
-                localStorage.setItem(LOCALSTORAGE_ORDER, JSON.stringify([]));
-              } else {
-                const orderLocal = JSON.parse(
-                  localStorage.getItem(LOCALSTORAGE_ORDER)
-                );
-                setOrdersDrawer([...orderLocal, newOrder]);
-                localStorage.setItem(
-                  LOCALSTORAGE_ORDER,
-                  JSON.stringify([...orderLocal, newOrder])
-                );
-              }
-            }
-            setorderIdSuccess(orderId);
+            // const newOrder = res.data.data;
+            // if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_ORDER))) {
+            //   localStorage.setItem(LOCALSTORAGE_ORDER, JSON.stringify([]));
+            // } else {
+            //   const orderLocal = JSON.parse(
+            //     localStorage.getItem(LOCALSTORAGE_ORDER)
+            //   );
+            //   setOrdersDrawer([...orderLocal, newOrder]);
+            //   localStorage.setItem(
+            //     LOCALSTORAGE_ORDER,
+            //     JSON.stringify([...orderLocal, newOrder])
+            //   );
+            // }
+            // }
+            // setorderIdSuccess(orderId);
 
             if (mode === "1") {
               localStorage.setItem(LOCALSTORAGE_CART_NAME1, JSON.stringify([]));
@@ -426,7 +427,7 @@ const Cart = ({}) => {
             setOpentModalSuccess(true);
             setisLoadingOrder(false);
             if (paymentType === 1) {
-              window.location.href = `https://deliveryvhgp-webapi.azurewebsites.net/api/v1/orders/ByOrderId/payment?orderId=${orderId}`;
+              // window.location.href = `https://deliveryvhgp-webapi.azurewebsites.net/api/v1/orders/ByOrderId/payment?orderId=${orderId}`;
             }
           }
         }

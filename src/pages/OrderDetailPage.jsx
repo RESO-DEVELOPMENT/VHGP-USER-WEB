@@ -31,6 +31,7 @@ export const OrderDetailPage = () => {
       .then((res) => {
         if (res.data) {
           const order = res.data;
+          console.log(order);
           setOrderInfo(order);
           setproductOrder(order.listProInMenu || []);
           setStatusOrder(order.listStatusOrder || []);

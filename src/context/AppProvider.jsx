@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { getAreas } from "../apis/apiService";
+import { getAreas, getOrdersbyPhone } from "../apis/apiService";
 import {
   LOCALSTORAGE_CART_NAME1,
   LOCALSTORAGE_CART_NAME2,
@@ -54,11 +54,27 @@ export default function AppProvider({ children }) {
   const [areaProvider, setAreaProvider] = useState([]);
   const [buildings, setBuildings] = useState([]);
   const [orderDrawer, setOrdersDrawer] = useState([]);
-  const [isLogin, setIsLogin] = useState([false]);
+  const [isLogin, setIsLogin] = useState(false);
+  const [isConfirmLogOut, setIsConfirmLogOut] = useState(false);
   // const [auth, setAuth] = useState({});
   let location = useLocation();
   let history = useHistory();
   // const { productItems } = Data;
+  useEffect(() => {
+    console.log(userInfo.phone);
+    getOrdersbyPhone(1, 100, userInfo.phone)
+      .then((res) => {
+        console.log(res);
+        if (res.data) {
+          setOrdersDrawer(res.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setAreaProvider([]);
+        setisLoadingMain(false);
+      });
+  }, [userInfo.phone]);
   useEffect(() => {
     getAreas(1, 100)
       .then((res) => {
@@ -79,12 +95,12 @@ export default function AppProvider({ children }) {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_ORDER))) {
-      localStorage.setItem(LOCALSTORAGE_ORDER, JSON.stringify([]));
-    } else {
-      const order = JSON.parse(localStorage.getItem(LOCALSTORAGE_ORDER));
-      setOrdersDrawer(order);
-    }
+    // if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_ORDER))) {
+    //   localStorage.setItem(LOCALSTORAGE_ORDER, JSON.stringify([]));
+    // } else {
+    //   const order = JSON.parse(localStorage.getItem(LOCALSTORAGE_ORDER));
+    //   setOrdersDrawer(order);
+    // }
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_MODE))) {
       // setAuth({ userId: "", isLogin: false, userPhone: "" });
       // localStorage.setItem(LOCALSTORAGE_MODE, JSON.stringify({ userId: "", isLogin: false, userPhone: "" }));
@@ -141,13 +157,14 @@ export default function AppProvider({ children }) {
       history.push("/");
     } else {
       const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME));
-      console.log("Hoan" + user);
+
       if (Object.keys(user).length === 0) {
         history.push("/");
       }
 
       setUserInfo(user);
     }
+
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
       setIsLogin(false);
     } else {
@@ -336,6 +353,8 @@ export default function AppProvider({ children }) {
         setIsOpenSignup,
         isOpenLogin,
         setIsOpenLogin,
+        isConfirmLogOut,
+        setIsConfirmLogOut,
       }}
     >
       {children}

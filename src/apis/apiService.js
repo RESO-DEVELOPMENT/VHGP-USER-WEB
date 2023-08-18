@@ -235,3 +235,14 @@ export const postAccountBuilding = (body) => {
     "Content-Type": "application/json",
   });
 };
+// https://api.vhgp.net/api/v1/order-management/orders/search-phone?pageIndex=1&pageSize=100&phone=0374814009
+export const getOrdersbyPhone = (index, size, phone) => {
+  return axios.get(
+    // order-management/orders/search-phone?pageIndex=1&pageSize=100&phone=0374814009
+    `${BASE_URL}order-management/orders/search-phone?pageIndex=${index}&pageSize=${size}&phone=${phone}`,
+    {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    }
+  );
+};

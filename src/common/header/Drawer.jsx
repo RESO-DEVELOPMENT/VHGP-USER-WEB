@@ -18,6 +18,7 @@ export const DrawerContent = () => {
     orderDrawer,
     setIsOpenLogin,
     setIsOpenSignup,
+    setIsConfirmLogOut,
   } = React.useContext(AppContext);
   let history = useHistory();
 
@@ -39,42 +40,7 @@ export const DrawerContent = () => {
           </div>
         </div>
         {isLogin === true ? (
-          <Link
-            to={"/"}
-            onClick={() => {
-              setIsOpenDrawer(false);
-              setIsLogin(false);
-              localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
-              localStorage.setItem(
-                LOCALSTORAGE_USER_LOGIN,
-                JSON.stringify(false)
-              );
-              localStorage.setItem(LOCALSTORAGE_USER_ID, JSON.stringify([]));
-              window.location.reload();
-            }}
-          >
-            <div
-              className="drawer__wrapper__item"
-              style={{ justifyContent: "start", gap: 10 }}
-            >
-              <div
-                className="center_flex"
-                style={{
-                  background: "#66bb6a",
-                  color: "#fff",
-                  width: 27,
-                  height: 27,
-                  borderRadius: 50,
-                }}
-              >
-                <i
-                  style={{ fontSize: 13, marginLeft: 2 }}
-                  class="fa-solid fa-right-to-bracket"
-                ></i>
-              </div>
-              <h4>Đăng xuất</h4>
-            </div>
-          </Link>
+          <></>
         ) : (
           <>
             <Link
@@ -145,7 +111,7 @@ export const DrawerContent = () => {
             <div
               className="center_flex"
               style={{
-                background: "#66bb6a",
+                background: "#777",
                 color: "#fff",
                 width: 27,
                 height: 27,
@@ -184,7 +150,62 @@ export const DrawerContent = () => {
             <h4>Theo dõi đơn hàng</h4>
           </div>
         </Link>
-
+        <Link to={"/policy"} onClick={() => setIsOpenDrawer(false)}>
+          <div
+            className="drawer__wrapper__item"
+            style={{ justifyContent: "start", gap: 10 }}
+          >
+            <div
+              className="center_flex"
+              style={{
+                background: "#333",
+                color: "#fff",
+                width: 27,
+                height: 27,
+                borderRadius: 50,
+              }}
+            >
+              <i className="fa-solid fa-lock"></i>
+            </div>
+            <h4>Privacy & Policy</h4>
+          </div>
+        </Link>
+        {isLogin === true ? (
+          <>
+            <Link
+              to={"/"}
+              onClick={() => {
+                setIsOpenDrawer(false);
+                setIsConfirmLogOut(true);
+              }}
+              style={{ order: 1 }}
+            >
+              <div
+                className="drawer__wrapper__item"
+                style={{ justifyContent: "start", gap: 10 }}
+              >
+                <div
+                  className="center_flex"
+                  style={{
+                    background: "rgb(230, 30 ,30)",
+                    color: "#fff",
+                    width: 27,
+                    height: 27,
+                    borderRadius: 50,
+                  }}
+                >
+                  <i
+                    style={{ fontSize: 13, marginLeft: 2 }}
+                    class="fa-solid fa-right-to-bracket"
+                  ></i>
+                </div>
+                <h4>Đăng xuất</h4>
+              </div>
+            </Link>
+          </>
+        ) : (
+          <></>
+        )}
         {orderDrawer.length > 0 && (
           <>
             <div style={{ padding: "20px 10px 10px 10px" }}>
@@ -197,6 +218,7 @@ export const DrawerContent = () => {
               </span>
             </div>
             {orderDrawer.map((item, index) => {
+              console.log(item);
               return (
                 <div
                   className="box cusor"
@@ -205,6 +227,7 @@ export const DrawerContent = () => {
                   onClick={() => {
                     history.push(`/order/${item.id}`);
                     setIsOpenDrawer(false);
+                    window.location.reload();
                   }}
                 >
                   <div className="product mtop" style={{ margin: 5 }}>
@@ -243,7 +266,9 @@ export const DrawerContent = () => {
                           className="order-store-title"
                           style={{ display: "flex", gap: 3, fontSize: "16px" }}
                         >
-                          {item.total?.toLocaleString()}
+                          {Number(item.total?.toLocaleString()) +
+                            Number(item.shipCost?.toLocaleString())}{" "}
+                          000
                           <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>
                             ₫
                           </span>

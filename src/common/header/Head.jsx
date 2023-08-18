@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import Rodal from "rodal";
@@ -14,8 +14,7 @@ import {
   LOCALSTORAGE_USER_NAME,
 } from "../../constants/Variable";
 import { AppContext } from "../../context/AppProvider";
-import { Hidden } from "@mui/material";
-import { displayName } from "react-addons-css-transition-group";
+
 const Head = () => {
   const {
     userInfo,
@@ -33,7 +32,11 @@ const Head = () => {
     isOpenSignup,
     setIsOpenLogin,
     setIsLogin,
+    isConfirmLogOut,
+    setIsConfirmLogOut,
   } = useContext(AppContext);
+  let indexDefaulAddress, cloneindexDefaulAddress;
+
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [building, setBuilding] = useState("");
@@ -53,7 +56,6 @@ const Head = () => {
   const [isValidLogin, setIsValidLogin] = useState(true);
   const [listAddress, setListAddress] = useState([]);
   const [openSelectAddress, setOpenSelectAddress] = useState(false);
-  const [indexAddressDefault, setIndexAddressDefault] = useState();
 
   let history = useHistory();
   const openDrawer = () => {
@@ -182,9 +184,6 @@ const Head = () => {
         history.push(`/mode/${mode}`);
       }
     }
-    if (isLogin === true) {
-      // postAccountBuilding();
-    }
   };
   const handleAddress = (defaultData) => {
     console.log(defaultData);
@@ -256,6 +255,13 @@ const Head = () => {
     } else {
       // Wrong information sign-up
       setIsValidLogin(false);
+    }
+    console.log(indexDefaulAddress);
+    console.log(cloneindexDefaulAddress);
+    if (indexDefaulAddress !== cloneindexDefaulAddress) {
+      console.log("đổi default");
+    } else {
+      console.log("khong doi");
     }
   };
   function validatePhoneNumber(input_str) {
@@ -614,11 +620,15 @@ const Head = () => {
           </div>
         </div>
       </Rodal>
+
       <Rodal
         height={500}
         width={400}
         visible={openSelectAddress}
         onClose={() => {
+          handleAddress(listAddress[cloneindexDefaulAddress]);
+          setVisiblePopupInfo(true);
+
           setOpenSelectAddress(false);
         }}
         style={{ borderRadius: 10 }}
@@ -648,10 +658,13 @@ const Head = () => {
             }}
           >
             {listAddress.map((value, index) => {
+              if (value.isDefault == 1) {
+                indexDefaulAddress = index;
+                cloneindexDefaulAddress = index;
+              }
               return (
                 <>
                   <label
-                    for="html"
                     style={{
                       display: "flex",
                       flexDirection: "row",
@@ -661,13 +674,13 @@ const Head = () => {
                   >
                     <input
                       type="radio"
-                      value="html"
                       name="topic"
                       id={index}
-                      checked
+                      defaultChecked={value.isDefault == 1 ? true : false}
                       onClick={(e) => {
-                        setIndexAddressDefault = Number(e.target.id);
-                        console.log(indexAddressDefault);
+                        cloneindexDefaulAddress = Number(e.target.id);
+                        console.log(cloneindexDefaulAddress);
+                        console.log(e);
                       }}
                     />
                     <div>
@@ -729,7 +742,9 @@ const Head = () => {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                setVisiblePopupInfo(false);
+                handleAddress(listAddress[indexDefaulAddress]);
+                setVisiblePopupInfo(true);
+                setOpenSelectAddress(false);
               }}
             >
               Đóng
@@ -739,8 +754,103 @@ const Head = () => {
                 e.preventDefault();
 
                 // set Defaut
-                handleAddress(listAddress[indexAddressDefault]);
+                handleAddress(listAddress[cloneindexDefaulAddress]);
+                setVisiblePopupInfo(true);
                 setOpenSelectAddress(false);
+              }}
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                background: "var(--primary)",
+                color: "#fff",
+                height: 45,
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Rodal>
+      <Rodal
+        height={200}
+        width={400}
+        visible={isConfirmLogOut}
+        onClose={() => {
+          setIsConfirmLogOut(false);
+        }}
+        style={{ borderRadius: 10 }}
+      >
+        <div
+          style={{
+            borderBottom: "1px solid rgb(220,220,220)",
+            paddingBottom: "10px",
+          }}
+        >
+          <span style={{ fontSize: 16, fontWeight: 700 }}>Xác nhận</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <p
+            style={{ fontSize: "20px", textAlign: "center", marginTop: "8px" }}
+          >
+            Bạn có muốn đăng xuất ?
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
+          <div
+            className="f_flex rodal-delet-cart"
+            style={{
+              width: " 100%",
+              justifyContent: "space-between",
+              paddingTop: 5,
+              gap: 15,
+            }}
+          >
+            <button
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                height: 45,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsConfirmLogOut(false);
+              }}
+            >
+              Đóng
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+
+                // set Defaut
+                setIsLogin(false);
+                localStorage.clear();
+                window.location.reload();
+                setIsConfirmLogOut(false);
               }}
               style={{
                 flex: 1,
@@ -790,7 +900,7 @@ const Head = () => {
                 disabled={visiblePopupInfo}
                 value={
                   user.building
-                    ? `${user.fullName}, ${user.building.label}  `
+                    ? ` ${user.building.label}  `
                     : "Nhập địa chỉ nhận hàng nhanh"
                 }
                 readOnly={true}

@@ -88,6 +88,7 @@ const OrderLookupPage = () => {
     //     handleSubmit(orderId);
     // } else
     if (orderIdUrl) {
+      console.log(orderIdUrl);
       setOrderId(orderIdUrl);
       handleSubmit(orderIdUrl);
     }
@@ -1343,8 +1344,9 @@ const OrderLookupPage = () => {
                             }}
                           >
                             {orderInfo.serviceId === "1"
-                              ? (orderInfo.shipCost - 10000)?.toLocaleString()
-                              : orderInfo.shipCost?.toLocaleString() || "--"}
+                              ? Number(orderInfo.shipCost.toLocaleString()) - 10
+                              : "--"}
+                            .000
                             <span
                               style={{
                                 fontSize: mobileMode ? "0.8rem" : "0.9rem",
@@ -1373,7 +1375,7 @@ const OrderLookupPage = () => {
                                 gap: 3,
                               }}
                             >
-                              {"10.000"}
+                              {orderInfo.serviceId === "1" ? 10 : 0 || "--"}.000
                               <span
                                 style={{
                                   fontSize: mobileMode ? "0.8rem" : "0.9rem",

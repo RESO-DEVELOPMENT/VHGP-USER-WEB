@@ -413,7 +413,7 @@ const Navbar = () => {
                       </div>
                       <h4 className="header-white-building">
                         {userInfo.building
-                          ? `${userInfo.fullName}, ${userInfo.building.label} `
+                          ? ` ${userInfo.building.label} `
                           : ``}
                       </h4>
                     </div>
