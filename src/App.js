@@ -27,6 +27,7 @@ import { SearchPage } from "./pages/SearchPage";
 import { ViewAllProductCatePage } from "./pages/ViewAllProductCatePage";
 import { ViewAllProductStorePage } from "./pages/ViewAllProductStorePage";
 import "./util.css";
+import PrivatePolicy from "./pages/PrivatePolicy";
 function App() {
   const {
     setMobileMode,
@@ -162,7 +163,9 @@ function App() {
           <Route path="/mode/:id/schedule" exact>
             <SchedulePage />
           </Route>
-
+          <Route path="/policy">
+            <PrivatePolicy></PrivatePolicy>
+          </Route>
           <Route path="*">
             <NotFoundPage />
           </Route>

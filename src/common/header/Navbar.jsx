@@ -412,7 +412,9 @@ const Navbar = () => {
                         <img src="/images/location.png" alt="" />
                       </div>
                       <h4 className="header-white-building">
-                        {userInfo.building?.label}, {userInfo.area?.label}
+                        {userInfo.building
+                          ? ` ${userInfo.building.label} `
+                          : ``}
                       </h4>
                     </div>
                   </>

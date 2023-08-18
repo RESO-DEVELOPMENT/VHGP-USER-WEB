@@ -1,10 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import Rodal from "rodal";
-import { getApartment } from "../../apis/apiService";
-import { LOCALSTORAGE_USER_NAME } from "../../constants/Variable";
+import {
+  Login,
+  getAccountBuilding,
+  getApartment,
+  postAccountBuilding,
+} from "../../apis/apiService";
+import {
+  LOCALSTORAGE_USER_ID,
+  LOCALSTORAGE_USER_LOGIN,
+  LOCALSTORAGE_USER_NAME,
+} from "../../constants/Variable";
 import { AppContext } from "../../context/AppProvider";
+
 const Head = () => {
   const {
     userInfo,
@@ -16,8 +26,18 @@ const Head = () => {
     setMode,
     setIsOpenDrawer,
     areaProvider,
+    isLogin,
+    isOpenLogin,
+    setIsOpenSignup,
+    isOpenSignup,
+    setIsOpenLogin,
+    setIsLogin,
+    isConfirmLogOut,
+    setIsConfirmLogOut,
   } = useContext(AppContext);
-  const [fullName, setFullName] = useState("ok");
+  let indexDefaulAddress, cloneindexDefaulAddress;
+
+  const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [building, setBuilding] = useState("");
   const [area, setArea] = useState("");
@@ -31,6 +51,12 @@ const Head = () => {
   const [isValidBuilding, setIsValidBuilding] = useState(false);
   const [isValidArea, setIsValidArea] = useState(false);
   const [isValidApartment, setIsValidApartment] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [isValidLogin, setIsValidLogin] = useState(true);
+  const [listAddress, setListAddress] = useState([]);
+  const [openSelectAddress, setOpenSelectAddress] = useState(false);
+
   let history = useHistory();
   const openDrawer = () => {
     setIsOpenDrawer(true);
@@ -53,7 +79,9 @@ const Head = () => {
           if (res.data) {
             const apart = res.data;
             setApartmentList(apart.listCluster);
+
             if (apartment) {
+              console.log(apartment);
               for (let index = 0; index < apart.listCluster.length; index++) {
                 const element = apart.listCluster[index];
                 if (element.id === apartment.value) {
@@ -134,6 +162,7 @@ const Head = () => {
       setIsValidPhoneRegex(false);
     }
     if (isValid) {
+      console.log({ fullName, phone, building, area, apartment });
       setVisiblePopupInfo(false);
       if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))) {
         localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
@@ -141,7 +170,13 @@ const Head = () => {
       } else {
         localStorage.setItem(
           LOCALSTORAGE_USER_NAME,
-          JSON.stringify({ fullName, phone, building, area, apartment })
+          JSON.stringify({
+            fullName,
+            phone,
+            building,
+            area,
+            apartment,
+          })
         );
         setUserInfo({ fullName, phone, building, area, apartment });
       }
@@ -150,7 +185,85 @@ const Head = () => {
       }
     }
   };
+  const handleAddress = (defaultData) => {
+    console.log(defaultData);
+    setFullName(defaultData.accountId);
+    setPhone(defaultData.soDienThoai);
+    setArea({ value: defaultData.areaId, label: defaultData.areaName });
+    setApartment({
+      value: defaultData.clusterId,
+      label: defaultData.clusterName,
+    });
+    setBuilding({
+      value: defaultData.buildingId,
+      label: defaultData.buildingName,
+    });
+    setOpenSelectAddress(true);
+  };
+  const handleLogin = (res) => {
+    if (res.status === 200) {
+      localStorage.setItem(
+        LOCALSTORAGE_USER_LOGIN,
+        JSON.stringify(JSON.stringify(true))
+      );
+      localStorage.setItem(
+        LOCALSTORAGE_USER_ID,
+        JSON.stringify(JSON.stringify(userName))
+      );
 
+      setIsLogin(true);
+      setIsOpenLogin(false);
+
+      // get information
+      getAccountBuilding(1, 10, userName).then((resBuilding) => {
+        if (resBuilding.status === 200) {
+          if (resBuilding.data.length === 0) {
+            setVisiblePopupInfo(true);
+          } else {
+            setListAddress(resBuilding.data);
+            setOpenSelectAddress(true);
+
+            // setUserInfo({ fullName, phone, building, area, apartment });
+            // setVisiblePopupInfo(true);
+          }
+        }
+        //
+        // old
+        // apartment
+        // :
+        // {value: "2", label: "S2"}
+        // area
+        // :
+        // {value: "2", label: "Rainbow"}
+        // building
+        // :
+        // {value: "b10", label: "S2.05"}
+        // fullName
+        // :
+        // "hoan"
+        // phone
+        // :
+        // "1234566788"
+        // new
+        // setArea(data.areaName);
+        //
+        // localStorage.setItem(
+        //   LOCALSTORAGE_USER_NAME,
+        //   JSON.stringify({ fullName, phone })
+        // );
+      });
+    } else {
+      // Wrong information sign-up
+      setIsValidLogin(false);
+    }
+    console.log(indexDefaulAddress);
+    console.log(cloneindexDefaulAddress);
+    if (indexDefaulAddress !== cloneindexDefaulAddress) {
+      console.log("đổi default");
+    } else {
+      console.log("khong doi");
+    }
+  };
   function validatePhoneNumber(input_str) {
     var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
 
@@ -181,6 +294,9 @@ const Head = () => {
           setIsValidBuilding(false);
           setIsValidFullname(false);
           setIsValidPhone(false);
+          if (isLogin) {
+            handleSubmit();
+          }
         }}
         style={{ borderRadius: 10 }}
       >
@@ -353,6 +469,9 @@ const Head = () => {
                 height: 45,
               }}
               onClick={(e) => {
+                if (isLogin) {
+                  handleSubmit();
+                }
                 e.preventDefault();
                 setVisiblePopupInfo(false);
               }}
@@ -363,6 +482,375 @@ const Head = () => {
               onClick={(e) => {
                 e.preventDefault();
                 handleSubmit();
+              }}
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                background: "var(--primary)",
+                color: "#fff",
+                height: 45,
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Rodal>
+      <Rodal
+        height={300}
+        width={400}
+        visible={isOpenLogin}
+        onClose={() => {
+          setIsOpenLogin(false);
+        }}
+        style={{ borderRadius: 10 }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                borderBottom: "1px solid rgb(220,220,220)",
+                paddingBottom: "10px",
+              }}
+            >
+              <span style={{ fontSize: 16, fontWeight: 700 }}>Đăng nhập</span>
+            </div>
+            <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>
+                Tài khoản <span style={{ color: "red", fontSize: 14 }}> *</span>
+              </span>
+            </div>
+            <input
+              onChange={(e) => {
+                setUserName(e.target.value);
+              }}
+              type="text"
+              style={{
+                border: "1px solid ",
+                width: " 100%",
+                borderRadius: 4,
+                padding: "10px 10px",
+                lineHeight: "1rem",
+                fontSize: "1rem",
+              }}
+            />
+            <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>
+                Mật khẩu <span style={{ color: "red", fontSize: 14 }}> *</span>
+              </span>
+            </div>
+            <input
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              type="password"
+              style={{
+                border: "1px solid ",
+                width: " 100%",
+                borderRadius: 4,
+                padding: "10px 10px",
+                lineHeight: "1rem",
+                fontSize: "1rem",
+              }}
+            />
+
+            <span style={{ fontSize: "14px", color: "red" }}>
+              {isValidLogin ? "" : "Thông tin đăng nhập không đúng"}
+            </span>
+          </div>
+
+          <div
+            className="f_flex rodal-delet-cart"
+            style={{
+              width: " 100%",
+              justifyContent: "space-between",
+              paddingTop: 5,
+              gap: 15,
+            }}
+          >
+            <button
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                height: 45,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setVisiblePopupInfo(false);
+              }}
+            >
+              Đóng
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                Login(userName, password).then((res) => {
+                  handleLogin(res);
+                });
+              }}
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                background: "var(--primary)",
+                color: "#fff",
+                height: 45,
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Rodal>
+
+      <Rodal
+        height={500}
+        width={400}
+        visible={openSelectAddress}
+        onClose={() => {
+          handleAddress(listAddress[cloneindexDefaulAddress]);
+          setVisiblePopupInfo(true);
+
+          setOpenSelectAddress(false);
+        }}
+        style={{ borderRadius: 10 }}
+      >
+        <div
+          style={{
+            borderBottom: "1px solid rgb(220,220,220)",
+            paddingBottom: "10px",
+          }}
+        >
+          <span style={{ fontSize: 16, fontWeight: 700 }}>Chọn địa chỉ</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
+          <div
+            style={{
+              marginTop: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "15px",
+            }}
+          >
+            {listAddress.map((value, index) => {
+              if (value.isDefault == 1) {
+                indexDefaulAddress = index;
+                cloneindexDefaulAddress = index;
+              }
+              return (
+                <>
+                  <label
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "15px",
+                      order: `${value.isDefault ? -1 : 0}  `,
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="topic"
+                      id={index}
+                      defaultChecked={value.isDefault == 1 ? true : false}
+                      onClick={(e) => {
+                        cloneindexDefaulAddress = Number(e.target.id);
+                        console.log(cloneindexDefaulAddress);
+                        console.log(e);
+                      }}
+                    />
+                    <div>
+                      <p>
+                        <span
+                          style={{
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {value.accountId}
+                        </span>
+                        <span>| {value.soDienThoai}</span>
+                      </p>
+                      <p>
+                        {value.buildingName}, {value.areaName} Vinhomes GP
+                      </p>
+                    </div>
+                    {value.isDefault ? (
+                      <>
+                        <button
+                          style={{
+                            lineHeight: "40px",
+                            background: "none",
+                            fontSize: "16px",
+                            border: "1px solid var(--primary) ",
+                            borderRadius: "4px",
+                            padding: "0px 8px",
+                          }}
+                        >
+                          Mặc định
+                        </button>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </label>
+                </>
+              );
+            })}
+          </div>
+          <div
+            className="f_flex rodal-delet-cart"
+            style={{
+              width: " 100%",
+              justifyContent: "space-between",
+              paddingTop: 5,
+              gap: 15,
+            }}
+          >
+            <button
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                height: 45,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleAddress(listAddress[indexDefaulAddress]);
+                setVisiblePopupInfo(true);
+                setOpenSelectAddress(false);
+              }}
+            >
+              Đóng
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+
+                // set Defaut
+                handleAddress(listAddress[cloneindexDefaulAddress]);
+                setVisiblePopupInfo(true);
+                setOpenSelectAddress(false);
+              }}
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                background: "var(--primary)",
+                color: "#fff",
+                height: 45,
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Rodal>
+      <Rodal
+        height={200}
+        width={400}
+        visible={isConfirmLogOut}
+        onClose={() => {
+          setIsConfirmLogOut(false);
+        }}
+        style={{ borderRadius: 10 }}
+      >
+        <div
+          style={{
+            borderBottom: "1px solid rgb(220,220,220)",
+            paddingBottom: "10px",
+          }}
+        >
+          <span style={{ fontSize: 16, fontWeight: 700 }}>Xác nhận</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <p
+            style={{ fontSize: "20px", textAlign: "center", marginTop: "8px" }}
+          >
+            Bạn có muốn đăng xuất ?
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
+          <div
+            className="f_flex rodal-delet-cart"
+            style={{
+              width: " 100%",
+              justifyContent: "space-between",
+              paddingTop: 5,
+              gap: 15,
+            }}
+          >
+            <button
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                height: 45,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsConfirmLogOut(false);
+              }}
+            >
+              Đóng
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+
+                // set Defaut
+                setIsLogin(false);
+                localStorage.clear();
+                window.location.reload();
+                setIsConfirmLogOut(false);
               }}
               style={{
                 flex: 1,
@@ -404,9 +892,17 @@ const Head = () => {
               <input
                 type="text"
                 placeholder="Nhập địa chỉ giao hàng"
-                onClick={() => setVisiblePopupInfo(true)}
+                onClick={() => {
+                  setVisiblePopupInfo(true);
+                  // test
+                  console.log(area);
+                }}
                 disabled={visiblePopupInfo}
-                value={user.building?.label || ""}
+                value={
+                  user.building
+                    ? ` ${user.building.label}  `
+                    : "Nhập địa chỉ nhận hàng nhanh"
+                }
                 readOnly={true}
                 style={{
                   borderTopRightRadius: "50%",

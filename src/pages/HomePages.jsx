@@ -285,72 +285,76 @@ const HomePage = ({ productItems, shopItems }) => {
                         </div>
                     </section> */}
 
-          <div className="mt-5" style={{ padding: "20px 20px" }}>
-            {isLoadingPage ? (
-              <Skeleton
-                borderRadius={5}
-                height={122}
-                style={{ marginBottom: 5 }}
-              />
-            ) : mode !== "3" && menuCategory && menuCategory?.length > 0 ? (
-              <div className="cateogry-menu">
-                <Slider {...settingCaategory}>
-                  {menuCategory &&
-                    menuCategory.map((cate, index) => {
-                      if (index > 6) {
-                        if (index === 7) {
+          {/* <div className="mt-5" style={{ padding: "20px 20px" }}>
+              {isLoadingPage ? (
+                <Skeleton
+                  borderRadius={5}
+                  height={122}
+                  style={{ marginBottom: 5 }}
+                />
+              ) : mode !== "3" && menuCategory && menuCategory?.length > 0 ? (
+                <div className="cateogry-menu">
+                  <Slider {...settingCaategory}>
+                    {menuCategory &&
+                      menuCategory.map((cate, index) => {
+                        if (index > 6) {
+                          if (index === 7) {
+                            return (
+                              <div key={index} className="cateogry-menu-wrapper ">
+                                <div
+                                  className="cateogry-menu-img"
+                                  // onClick={() => hanldeViewAll(999, "Xem thêm")}
+                                >
+                                  <img
+                                    src={
+                                      "/images/load_more_icon.png" ||
+                                      "https://thumbs.dreamstime.com/b/vietnamese-pho-soup-illustration-97217112.jpg"
+                                    }
+                                    alt=""
+                                  />
+                                </div>
+                                <span className="cateogry-menu-text">
+                                  Xem thêm
+                                </span>
+                              </div>
+                            );
+                          }
+                        } else
                           return (
                             <div key={index} className="cateogry-menu-wrapper ">
                               <div
                                 className="cateogry-menu-img"
-                                // onClick={() => hanldeViewAll(999, "Xem thêm")}
+                                onClick={() => {
+                                  hanldeViewAll(cate.id, cate.name);
+                                }}
                               >
                                 <img
                                   src={
-                                    "/images/load_more_icon.png" ||
+                                    cate.image ||
                                     "https://thumbs.dreamstime.com/b/vietnamese-pho-soup-illustration-97217112.jpg"
                                   }
                                   alt=""
                                 />
                               </div>
                               <span className="cateogry-menu-text">
-                                Xem thêm
+                                {cate.name}
                               </span>
                             </div>
                           );
-                        }
-                      } else
-                        return (
-                          <div key={index} className="cateogry-menu-wrapper ">
-                            <div
-                              className="cateogry-menu-img"
-                              onClick={() => {
-                                hanldeViewAll(cate.id, cate.name);
-                              }}
-                            >
-                              <img
-                                src={
-                                  cate.image ||
-                                  "https://thumbs.dreamstime.com/b/vietnamese-pho-soup-illustration-97217112.jpg"
-                                }
-                                alt=""
-                              />
-                            </div>
-                            <span className="cateogry-menu-text">
-                              {cate.name}
-                            </span>
-                          </div>
-                        );
-                    })}
-                </Slider>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
+                      })}
+                  </Slider>
+                </div>
+              ) : (
+                ""
+              )}
+            </div> */}
 
           {/* // mon ngon gan ban  */}
-          <div className="preview_store_mode_2" onClick={() => {}}>
+          <div
+            className="preview_store_mode_2"
+            style={{ marginTop: "20px" }}
+            onClick={() => {}}
+          >
             {!isLoadingPage &&
             !isLoadingProduct &&
             listStore.length > 0 === true ? (
