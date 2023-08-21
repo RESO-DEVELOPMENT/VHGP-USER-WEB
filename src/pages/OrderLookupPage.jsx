@@ -16,6 +16,7 @@ const OrderLookupPage = () => {
     setisCartMain1,
     setisCartMain2,
     setisCartMain3,
+    orderDrawer,
   } = useContext(AppContext);
   const [isLoadingCircle, setIsLoadingCircle] = useState(false);
   const [orderInfo, setOrderInfo] = useState(null);
@@ -26,6 +27,7 @@ const OrderLookupPage = () => {
   const [orderId, setOrderId] = useState("");
   const [statusCanCelName, setStatusCanCelName] = useState("");
   const [productOrder, setproductOrder] = useState([]);
+  const [torerender, setTorerender] = useState(1);
   let history = useHistory();
   const statusMain = [
     {
@@ -1530,6 +1532,79 @@ const OrderLookupPage = () => {
           </div>
         </>
       )}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 15,
+          marginTop: "20px",
+          padding: " 0px 50px",
+        }}
+      >
+        {orderDrawer.map((item, index) => {
+          return (
+            <div
+              className="box cusor"
+              key={index}
+              style={{ width: "100%", padding: "0px 5px 7px 5px" }}
+              onClick={() => {
+                history.push(`/order/${item.id}`);
+
+                window.location.reload();
+              }}
+            >
+              <div className="product mtop" style={{ margin: 5 }}>
+                <div
+                  className="order-wrapper f_flex"
+                  style={{
+                    justifyContent: "space-between",
+                    padding: "5px",
+                    margin: 0,
+                  }}
+                >
+                  <div className="f_flex order-info" style={{ gap: 15 }}>
+                    <div
+                      className="order-store cusor"
+                      style={{ justifyContent: "flex-start" }}
+                    >
+                      <span
+                        className="order-store-title"
+                        style={{ fontSize: "15px", paddingBottom: 0 }}
+                      >
+                        #{item.id}
+                      </span>
+                      <span
+                        className="order-store-time"
+                        style={{ fontSize: "14px" }}
+                      >
+                        {item.storeName}
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="f_flex order-status-wrapper"
+                    style={{ flexDirection: "column", gap: 10, width: 115 }}
+                  >
+                    <span
+                      className="order-store-title"
+                      style={{ display: "flex", gap: 3, fontSize: "16px" }}
+                    >
+                      {Number(item.total?.toLocaleString()) +
+                        Number(item.shipCost?.toLocaleString())}{" "}
+                      000
+                      <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>
+                        ₫
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 };

@@ -210,14 +210,15 @@ export const DrawerContent = () => {
           <>
             <div style={{ padding: "20px 10px 10px 10px" }}>
               <span style={{ fontWeight: 700 }}>
-                Bạn có{" "}
+                {/* Bạn có{" "}
                 <span style={{ color: "var(--primary)" }}>
                   {orderDrawer?.length || "0"}
                 </span>{" "}
-                đơn hàng{" "}
+                đơn hàng{" "} */}
+                Lịch sử đơn hàng
               </span>
             </div>
-            {orderDrawer.map((item, index) => {
+            {orderDrawer.slice(0, 10).map((item, index) => {
               return (
                 <div
                   className="box cusor"
