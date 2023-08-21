@@ -218,7 +218,6 @@ export const DrawerContent = () => {
               </span>
             </div>
             {orderDrawer.map((item, index) => {
-              console.log(item);
               return (
                 <div
                   className="box cusor"

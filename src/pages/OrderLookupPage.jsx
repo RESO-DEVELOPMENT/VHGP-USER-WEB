@@ -1344,9 +1344,11 @@ const OrderLookupPage = () => {
                             }}
                           >
                             {orderInfo.serviceId === "1"
-                              ? Number(orderInfo.shipCost.toLocaleString()) - 10
-                              : "--"}
-                            .000
+                              ? Number(orderInfo.shipCost.toLocaleString()) -
+                                10 +
+                                ".000"
+                              : Number(orderInfo.shipCost.toLocaleString()) +
+                                ".000"}
                             <span
                               style={{
                                 fontSize: mobileMode ? "0.8rem" : "0.9rem",
