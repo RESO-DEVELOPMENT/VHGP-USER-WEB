@@ -81,6 +81,17 @@ const HomePage = ({ productItems, shopItems }) => {
       },
     ],
   };
+  const settingBanner = {
+    dots: !mobileMode,
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    fade: true,
+    appendDots: (dots) => {
+      return <ul style={{ margin: "0px" }}>{dots}</ul>;
+    },
+  };
   const hanldeViewAll = (cateId, categoryName) => {
     if (userInfo.building && userInfo.fullName && userInfo.phone) {
       setMode("2");
@@ -255,6 +266,57 @@ const HomePage = ({ productItems, shopItems }) => {
               <span>Đặt Hàng</span>
             </div>
           </div>
+          <section
+            className="TopCate"
+            style={{
+              width: "100%",
+              marginTop: "20px",
+              marginBottom: `${mobileMode ? "20px" : "30px"}`,
+            }}
+          >
+            <div className="container">
+              <Slider {...settingBanner}>
+                {Mdata.map((value, index) => {
+                  return (
+                    <>
+                      <div
+                        className="box product"
+                        key={index}
+                        style={{
+                          padding: 0,
+                          background: "none",
+                          borderRadius: "0.5rem",
+                          boxShadow: "none",
+                          margin: 0,
+                          transition: "1s all",
+                        }}
+                      >
+                        <div
+                          className="slide-img"
+                          style={{
+                            borderRadius: "0.5rem",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <img
+                            src={value.cover}
+                            alt=""
+                            style={{
+                              objectFit: "cover",
+                              width: "100%",
+                              height: "100%",
+                              borderRadius: "0.5rem",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+              </Slider>
+            </div>
+          </section>
+
           {/* <section className="TopCate  " style={{ width: "100%" }}>
                         <div className="container" style={{ padding: 0 }}>
                             <Slider {...settings}>
