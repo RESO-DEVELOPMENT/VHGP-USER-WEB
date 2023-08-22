@@ -126,14 +126,15 @@ const Cart = ({}) => {
         setTotalPrice(total);
         setCartList(Cart3);
       }
-      let menuId = "13c699e4-7e19-4ecb-ac99-1df0661f0e61";
+      // let menuId = "13c699e4-7e19-4ecb-ac99-1df0661f0e61";
       if (area) {
         Promise.all([
-          getTimeDurationList(menuId, 1, 100),
+          getTimeDurationList(menuIdProvider, 1, 100),
           getApartment(area.value),
           getShipcostByMenu(menuIdCart),
         ])
           .then((res) => {
+            console.log(res);
             if (res.length > 0) {
               const duration = res[0].data;
               const apart = res[1].data;

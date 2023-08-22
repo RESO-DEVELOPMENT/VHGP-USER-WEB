@@ -210,7 +210,8 @@ const Head = () => {
 
   const handleLogin = (res) => {
     console.log(res);
-    if (res.status === 200 && res.roleID === "2") {
+    if (res.status === 200 && res.data.roleId === "2") {
+      setIsValidLogin("0");
       localStorage.setItem(
         LOCALSTORAGE_USER_LOGIN,
         JSON.stringify(JSON.stringify(true))
@@ -261,7 +262,7 @@ const Head = () => {
         //   JSON.stringify({ fullName, phone })
         // );
       });
-    } else if (res.status === 200 && res.roleID !== "2") {
+    } else if (res.status === 200 && res.data.roleId !== "2") {
       setIsValidLogin("2");
     } else {
       // Wrong information sign-up
@@ -606,7 +607,7 @@ const Head = () => {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                setVisiblePopupInfo(false);
+                setIsOpenLogin(false);
               }}
             >
               Đóng
@@ -635,7 +636,129 @@ const Head = () => {
           </div>
         </div>
       </Rodal>
+      <Rodal
+        height={300}
+        width={mobileMode ? 350 : 400}
+        visible={isOpenSignup}
+        onClose={() => {
+          setIsOpenSignup(false);
+        }}
+        style={{ borderRadius: 10 }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                borderBottom: "1px solid rgb(220,220,220)",
+                paddingBottom: "10px",
+              }}
+            >
+              <span style={{ fontSize: 16, fontWeight: 700 }}>Đăng ký</span>
+            </div>
+            <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>
+                Tài khoản <span style={{ color: "red", fontSize: 14 }}> *</span>
+              </span>
+            </div>
+            <input
+              onChange={(e) => {
+                setUserName(e.target.value);
+              }}
+              type="text"
+              style={{
+                border: "1px solid ",
+                width: " 100%",
+                borderRadius: 4,
+                padding: "10px 10px",
+                lineHeight: "1rem",
+                fontSize: "1rem",
+              }}
+            />
+            <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>
+                Mật khẩu <span style={{ color: "red", fontSize: 14 }}> *</span>
+              </span>
+            </div>
+            <input
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              type="password"
+              style={{
+                border: "1px solid ",
+                width: " 100%",
+                borderRadius: 4,
+                padding: "10px 10px",
+                lineHeight: "1rem",
+                fontSize: "1rem",
+              }}
+            />
 
+            <span style={{ fontSize: "14px", color: "red" }}>
+              {isValidLogin === "1" ? "Thông tin đăng nhập không đúng" : ""}
+              {isValidLogin === "2"
+                ? "Bạn không được phép đăng nhập hệ thống này"
+                : ""}
+            </span>
+          </div>
+
+          <div
+            className="f_flex rodal-delet-cart"
+            style={{
+              width: " 100%",
+              justifyContent: "space-between",
+              paddingTop: 5,
+              gap: 15,
+            }}
+          >
+            <button
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                height: 45,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpenSignup(false);
+              }}
+            >
+              Đóng
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                // Login(userName, password).then((res) => {
+                //   handleLogin(res);
+                // });
+              }}
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                background: "var(--primary)",
+                color: "#fff",
+                height: 45,
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Rodal>
       <Rodal
         height={500}
         width={mobileMode ? 350 : 400}

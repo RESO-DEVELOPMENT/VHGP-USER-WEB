@@ -150,7 +150,7 @@ export const DrawerContent = () => {
             <h4>Theo dõi đơn hàng</h4>
           </div>
         </Link>
-        <Link to={"/policy"} onClick={() => setIsOpenDrawer(false)}>
+        <Link to={"/policy"} replace onClick={() => setIsOpenDrawer(false)}>
           <div
             className="drawer__wrapper__item"
             style={{ justifyContent: "start", gap: 10 }}
