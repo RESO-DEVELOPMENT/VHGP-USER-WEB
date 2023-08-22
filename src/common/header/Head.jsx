@@ -54,7 +54,7 @@ const Head = () => {
   const [isValidApartment, setIsValidApartment] = useState(false);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [isValidLogin, setIsValidLogin] = useState(true);
+  const [isValidLogin, setIsValidLogin] = useState("0");
   const [listAddress, setListAddress] = useState([]);
   const [openSelectAddress, setOpenSelectAddress] = useState(false);
 
@@ -209,7 +209,8 @@ const Head = () => {
   };
 
   const handleLogin = (res) => {
-    if (res.status === 200) {
+    console.log(res);
+    if (res.status === 200 && res.roleID === "2") {
       localStorage.setItem(
         LOCALSTORAGE_USER_LOGIN,
         JSON.stringify(JSON.stringify(true))
@@ -260,10 +261,13 @@ const Head = () => {
         //   JSON.stringify({ fullName, phone })
         // );
       });
+    } else if (res.status === 200 && res.roleID !== "2") {
+      setIsValidLogin("2");
     } else {
       // Wrong information sign-up
-      setIsValidLogin(false);
+      setIsValidLogin("1");
     }
+
     console.log(cloneindexDefaulAddress);
     if (indexDefaulAddress !== cloneindexDefaulAddress) {
       console.log("đổi default");
@@ -574,7 +578,10 @@ const Head = () => {
             />
 
             <span style={{ fontSize: "14px", color: "red" }}>
-              {isValidLogin ? "" : "Thông tin đăng nhập không đúng"}
+              {isValidLogin === "1" ? "Thông tin đăng nhập không đúng" : ""}
+              {isValidLogin === "2"
+                ? "Bạn không được phép đăng nhập hệ thống này"
+                : ""}
             </span>
           </div>
 
@@ -749,6 +756,7 @@ const Head = () => {
                 fontWeight: 700,
                 borderRadius: 10,
                 height: 45,
+                display: "none",
               }}
               onClick={(e) => {
                 e.preventDefault();
