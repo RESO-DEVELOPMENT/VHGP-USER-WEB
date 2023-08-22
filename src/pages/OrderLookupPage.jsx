@@ -102,7 +102,7 @@ const OrderLookupPage = () => {
     });
 
     // setHeaderInfo({ isSearchHeader: false, title: "Chi tiết đơn hàng" });
-  }, []);
+  }, [location.pathname]);
   const handleSubmit = (id) => {
     setisCartMain1(false);
     setisCartMain2(false);
@@ -1545,9 +1545,7 @@ const OrderLookupPage = () => {
               key={index}
               style={{ width: "100%", padding: "0px 5px 7px 5px" }}
               onClick={() => {
-                history.push(`/order/${item.id}`);
-
-                window.location.reload();
+                history.replace(`/order/${item.id}`);
               }}
             >
               <div className="product mtop" style={{ margin: 5 }}>

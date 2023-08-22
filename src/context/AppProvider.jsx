@@ -180,7 +180,7 @@ export default function AppProvider({ children }) {
       // setUserInfo(user);
     }
     return () => {};
-  }, [history]);
+  }, [isLogin, history]);
 
   // useEffect(() => {
   //     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {

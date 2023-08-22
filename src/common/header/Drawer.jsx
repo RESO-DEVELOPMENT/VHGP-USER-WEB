@@ -227,7 +227,7 @@ export const DrawerContent = () => {
                   onClick={() => {
                     history.push(`/order/${item.id}`);
                     setIsOpenDrawer(false);
-                    window.location.reload();
+                    // window.location.reload();
                   }}
                 >
                   <div className="product mtop" style={{ margin: 5 }}>

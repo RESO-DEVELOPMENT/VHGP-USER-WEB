@@ -63,6 +63,7 @@ const Head = () => {
     document.body.style.overflow = "hidden";
     document.body.style.touchAction = "none";
   };
+
   useEffect(() => {
     setUser(userInfo);
     setFullName(userInfo.fullName || "");
@@ -502,7 +503,7 @@ const Head = () => {
       </Rodal>
       <Rodal
         height={300}
-        width={400}
+        width={mobileMode ? 350 : 400}
         visible={isOpenLogin}
         onClose={() => {
           setIsOpenLogin(false);
@@ -623,7 +624,7 @@ const Head = () => {
 
       <Rodal
         height={500}
-        width={400}
+        width={mobileMode ? 350 : 400}
         visible={openSelectAddress}
         onClose={() => {
           handleAddress(listAddress[cloneindexDefaulAddress]);
@@ -777,7 +778,7 @@ const Head = () => {
       </Rodal>
       <Rodal
         height={200}
-        width={400}
+        width={mobileMode ? 350 : 400}
         visible={isConfirmLogOut}
         onClose={() => {
           setIsConfirmLogOut(false);
@@ -845,11 +846,10 @@ const Head = () => {
             <button
               onClick={(e) => {
                 e.preventDefault();
-
                 // set Defaut
                 setIsLogin(false);
                 localStorage.clear();
-                window.location.reload();
+                history.push("/");
                 setIsConfirmLogOut(false);
               }}
               style={{
