@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { getListProductByStoreId } from "../apis/apiService";
+import { getListProductByStoreId, getMenuByMode } from "../apis/apiService";
 import Loading from "../common/Loading/Loading";
 import { ProductList } from "../components/products/ProductList";
 import { AppContext } from "../context/AppProvider";
@@ -13,6 +13,7 @@ export const ViewAllProductStorePage = () => {
     mobileMode,
     mode,
     deliveryDate,
+    setMenuIdProvider,
   } = useContext(AppContext);
   const [isLoadingCircle, setIsLoadingCircle] = useState(true);
   const [products, setProducts] = useState(null);
@@ -21,49 +22,49 @@ export const ViewAllProductStorePage = () => {
   const [storeDes, setStoreDes] = useState("");
   const [openTime, setOpenTime] = useState("");
   const [closeTime, setCloseTime] = useState("");
-
   const [img, setImg] = useState("");
   let location = useLocation();
   let history = useHistory();
+  let modeId = location.pathname.trim().split("/")[2];
+  console.log("modeId", modeId);
+  getMenuByMode(modeId).then((rs) => {
+    const menu = rs.data;
+    setMenuIdProvider(menu.id);
+    console.log("Menu", menu.id);
+  });
   useEffect(() => {
-    let modeId = location.pathname.trim().split("/")[2];
     console.log(menuIdProvider);
-    if (menuIdProvider === "0") {
-      history.push(`/mode/${modeId}`);
-    } else {
-      console.log(menuIdProvider);
-      let storeId = location.pathname.trim().split("/")[4];
-      setIsLoadingCircle(true);
-      getListProductByStoreId(menuIdProvider, storeId, 1, 100)
-        .then((res) => {
-          if (res.data) {
-            const category = res.data;
-            const productList = category.listProducts || [];
-            const title = category.name;
-            setTitle(title);
-            setStoreDes(category.description);
-            const image = category.image;
-            setImg(image);
-            setBuilding(category.location);
-            setCloseTime(category.closeTime);
-            setOpenTime(category.openTime);
-            setProducts(productList);
-            setHeaderInfo({
-              isSearchHeader: false,
-              title: "Chi tiết cửa hàng",
-            });
-            setIsLoadingCircle(false);
-          } else {
-            setIsLoadingCircle(false);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
+    let storeId = location.pathname.trim().split("/")[4];
+    console.log(storeId);
+    setIsLoadingCircle(true);
+    getListProductByStoreId(menuIdProvider, storeId, 1, 100)
+      .then((res) => {
+        if (res.data) {
+          const category = res.data;
+          const productList = category.listProducts || [];
+          const title = category.name;
+          setTitle(title);
+          setStoreDes(category.description);
+          const image = category.image;
+          setImg(image);
+          setBuilding(category.location);
+          setCloseTime(category.closeTime);
+          setOpenTime(category.openTime);
+          setProducts(productList);
+          setHeaderInfo({
+            isSearchHeader: false,
+            title: "Chi tiết cửa hàng",
+          });
           setIsLoadingCircle(false);
-          setProducts([]);
-        });
-    }
-
+        } else {
+          setIsLoadingCircle(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoadingCircle(false);
+        setProducts([]);
+      });
     return () => {
       setIsLoadingCircle(false);
     };

@@ -6,6 +6,7 @@ import Slider from "react-slick";
 import { banner } from "../constants/Variable";
 import { AppContext } from "../context/AppProvider";
 import { ShopSlide } from "../components/shop/ShopSlide";
+import { useParams } from "react-router-dom";
 import {
   getListStoreCategory,
   getListStoreInMenuByMode,
@@ -28,7 +29,6 @@ import {
   Mdata2,
   Mdata3,
 } from "../constants/Variable";
-
 const HomePage = ({ productItems, shopItems }) => {
   const {
     userInfo,
@@ -234,7 +234,8 @@ const HomePage = ({ productItems, shopItems }) => {
 
                 if (userInfo.building && userInfo.fullName && userInfo.phone) {
                   setVisiblePopupInfo(false);
-                  history.push(`/mode/${2}`, { home: true });
+
+                  history.push(`/mode/${2}/menu/`, { home: true });
                   setisLoadigFromHome(true);
                 } else {
                   setVisiblePopupInfo(true);
