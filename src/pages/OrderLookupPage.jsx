@@ -1586,9 +1586,7 @@ const OrderLookupPage = () => {
                       className="order-store-title"
                       style={{ display: "flex", gap: 3, fontSize: "16px" }}
                     >
-                      {Number(item.total?.toLocaleString()) +
-                        Number(item.shipCost?.toLocaleString())}{" "}
-                      000
+                      {(item.total + item.shipCost).toLocaleString()}
                       <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>
                         ₫
                       </span>

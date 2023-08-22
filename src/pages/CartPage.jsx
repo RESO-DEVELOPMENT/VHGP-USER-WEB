@@ -79,7 +79,7 @@ const Cart = ({}) => {
   const [isLoadingWhite, setisLoadingWhite] = useState(true);
   const [isValidPhoneRegex, setIsValidPhoneRegex] = useState(true);
   const [storeName, setStoreName] = useState("");
-  const [service, setService] = useState("1");
+  const [service, setService] = useState("2");
   const [deliveryDateCart, setDeliveryDate] = useState("");
   // const [isLoading, setIsLoading] = useState(true);
   const [paymentType, setPaymentType] = useState(0);
@@ -1199,6 +1199,7 @@ const Cart = ({}) => {
                       gap: 15,
                       opacity: service === "2" ? 0.6 : 1,
                       transition: "0.3s all",
+                      display: "none",
                     }}
                   >
                     <label
@@ -1208,7 +1209,7 @@ const Cart = ({}) => {
                     >
                       <div style={{ marginRight: 10 }}>
                         <input
-                          checked={true}
+                          checked={false}
                           type="checkbox"
                           className="myinput"
                           id="service"
@@ -1305,7 +1306,7 @@ const Cart = ({}) => {
                     <span style={{ fontSize: 15, fontWeight: 600 }}>₫</span>
                   </span>
                 </div>
-                <div className="c_flex">
+                {/* <div className="c_flex">
                   <span style={{ fontSize: mobileMode ? 14 : 16 }}>
                     Phí dịch vụ hỏa tốc
                   </span>
@@ -1320,7 +1321,7 @@ const Cart = ({}) => {
                     {service === "1" ? "10.000" : 0}
                     <span style={{ fontSize: 15, fontWeight: 600 }}>₫</span>
                   </span>
-                </div>
+                </div> */}
               </div>
             </div>
           </section>
