@@ -4,6 +4,7 @@ import Select from "react-select";
 import Rodal from "rodal";
 import {
   Login,
+  SignUp,
   getAccountBuilding,
   getApartment,
   postAccountBuilding,
@@ -55,9 +56,13 @@ const Head = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [isValidLogin, setIsValidLogin] = useState("0");
+  // 0 is oke, 1 is... , 2 is...
   const [listAddress, setListAddress] = useState([]);
   const [openSelectAddress, setOpenSelectAddress] = useState(false);
-
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isValidSignup, setIsValidSignup] = useState("0");
+  const [statusAddress, setStatusAddress] = useState("2");
+  // "1" là đang add, "2 là đang sửa"
   let history = useHistory();
   const openDrawer = () => {
     setIsOpenDrawer(true);
@@ -637,7 +642,7 @@ const Head = () => {
         </div>
       </Rodal>
       <Rodal
-        height={300}
+        height={465}
         width={mobileMode ? 350 : 400}
         visible={isOpenSignup}
         onClose={() => {
@@ -664,9 +669,30 @@ const Head = () => {
             </div>
             <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
               <span style={{ fontSize: 16, fontWeight: 700 }}>
+                Họ và tên đầy đủ{" "}
+                <span style={{ color: "red", fontSize: 14 }}> *</span>
+              </span>
+            </div>
+            <input
+              onChange={(e) => {
+                setFullName(e.target.value);
+              }}
+              type="text"
+              style={{
+                border: "1px solid ",
+                width: " 100%",
+                borderRadius: 4,
+                padding: "10px 10px",
+                lineHeight: "1rem",
+                fontSize: "1rem",
+              }}
+            />
+            <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>
                 Tài khoản <span style={{ color: "red", fontSize: 14 }}> *</span>
               </span>
             </div>
+
             <input
               onChange={(e) => {
                 setUserName(e.target.value);
@@ -700,12 +726,30 @@ const Head = () => {
                 fontSize: "1rem",
               }}
             />
+            <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>
+                Xác nhận mật khẩu{" "}
+                <span style={{ color: "red", fontSize: 14 }}> *</span>
+              </span>
+            </div>
+            <input
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
+              type="password"
+              style={{
+                border: "1px solid ",
+                width: " 100%",
+                borderRadius: 4,
+                padding: "10px 10px",
+                lineHeight: "1rem",
+                fontSize: "1rem",
+              }}
+            />
 
             <span style={{ fontSize: "14px", color: "red" }}>
-              {isValidLogin === "1" ? "Thông tin đăng nhập không đúng" : ""}
-              {isValidLogin === "2"
-                ? "Bạn không được phép đăng nhập hệ thống này"
-                : ""}
+              {isValidSignup === "0" ? "Vui lòng nhập đẩy đủ thông tin" : ""}
+              {isValidSignup === "1" ? "Xác nhận mật khẩu không đúng" : ""}
             </span>
           </div>
 
@@ -741,6 +785,20 @@ const Head = () => {
                 // Login(userName, password).then((res) => {
                 //   handleLogin(res);
                 // });
+                if (
+                  fullName == "" ||
+                  userName == "" ||
+                  confirmPassword == "" ||
+                  password == ""
+                ) {
+                  setIsValidSignup("0");
+                } else if (password === confirmPassword) {
+                  SignUp(userName, password, fullName, null);
+                  // (username, pass, name, imageUrl)
+                  setIsOpenSignup(false);
+                } else {
+                  setIsValidSignup("1");
+                }
               }}
               style={{
                 flex: 1,

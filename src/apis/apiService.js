@@ -218,6 +218,16 @@ export const Login = (id, pass) => {
     }
   );
 };
+// https://api.vhgp.net/api/v1/account-management/accounts?username=endy&pass=12345689&name=endy&imageUrl=null
+export const SignUp = (username, pass, name, imageUrl) => {
+  return axios.post(
+    `${BASE_URL}account-management/accounts?username=${username}&pass=${pass}&name=${name}&imageUrl=${imageUrl}`,
+    {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    }
+  );
+};
 // https://api.vhgp.net/api/v1/account-building?pageIndex=1&pageSize=10&AccountId=endy
 export const getAccountBuilding = (index, size, id) => {
   return axios.get(
@@ -253,3 +263,4 @@ export const setDefaultAddress = (id) => {
     "Content-Type": "application/json",
   });
 };
+// https://api.vhgp.net/api/v1/account-management/accounts?username=endy&pass=12345689&name=endy&imageUrl=null

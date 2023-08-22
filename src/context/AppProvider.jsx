@@ -74,7 +74,7 @@ export default function AppProvider({ children }) {
         setAreaProvider([]);
         setisLoadingMain(false);
       });
-  }, [userInfo.phone]);
+  }, [userInfo.phone, opentModalSuccess]);
   useEffect(() => {
     getAreas(1, 100)
       .then((res) => {
