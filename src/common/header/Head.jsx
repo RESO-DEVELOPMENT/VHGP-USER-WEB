@@ -7,6 +7,7 @@ import {
   getAccountBuilding,
   getApartment,
   postAccountBuilding,
+  setDefaultAddress,
 } from "../../apis/apiService";
 import {
   LOCALSTORAGE_USER_ID,
@@ -82,7 +83,6 @@ const Head = () => {
             setApartmentList(apart.listCluster);
 
             if (apartment) {
-              console.log(apartment);
               for (let index = 0; index < apart.listCluster.length; index++) {
                 const element = apart.listCluster[index];
                 if (element.id === apartment.value) {
@@ -163,7 +163,6 @@ const Head = () => {
       setIsValidPhoneRegex(false);
     }
     if (isValid) {
-      console.log({ fullName, phone, building, area, apartment });
       setVisiblePopupInfo(false);
       if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))) {
         localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
@@ -200,7 +199,15 @@ const Head = () => {
       label: defaultData.buildingName,
     });
     setOpenSelectAddress(true);
+    setDefaultAddress(defaultData.accountBuildId)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
   const handleLogin = (res) => {
     if (res.status === 200) {
       localStorage.setItem(
@@ -257,7 +264,6 @@ const Head = () => {
       // Wrong information sign-up
       setIsValidLogin(false);
     }
-    console.log(indexDefaulAddress);
     console.log(cloneindexDefaulAddress);
     if (indexDefaulAddress !== cloneindexDefaulAddress) {
       console.log("đổi default");
@@ -265,6 +271,7 @@ const Head = () => {
       console.log("khong doi");
     }
   };
+
   function validatePhoneNumber(input_str) {
     var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
 
@@ -629,7 +636,6 @@ const Head = () => {
         onClose={() => {
           handleAddress(listAddress[cloneindexDefaulAddress]);
           setVisiblePopupInfo(true);
-
           setOpenSelectAddress(false);
         }}
         style={{ borderRadius: 10 }}
@@ -668,55 +674,58 @@ const Head = () => {
                   <label
                     style={{
                       display: "flex",
-                      flexDirection: "row",
-                      gap: "15px",
-                      order: `${value.isDefault ? -1 : 0}  `,
+                      flexDirection: "column",
+                      gap: "5px",
                     }}
                   >
-                    <input
-                      type="radio"
-                      name="topic"
-                      id={index}
-                      defaultChecked={value.isDefault == 1 ? true : false}
-                      onClick={(e) => {
-                        cloneindexDefaulAddress = Number(e.target.id);
-                        console.log(cloneindexDefaulAddress);
-                        console.log(e);
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "15px",
                       }}
-                    />
-                    <div>
-                      <p>
-                        <span
-                          style={{
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {value.accountId}
-                        </span>
-                        <span>| {value.soDienThoai}</span>
-                      </p>
-                      <p>
-                        {value.buildingName}, {value.areaName} Vinhomes GP
-                      </p>
+                    >
+                      <input
+                        type="radio"
+                        name="topic"
+                        id={index}
+                        defaultChecked={value.isDefault === 1 ? true : false}
+                        onClick={(e) => {
+                          cloneindexDefaulAddress = Number(e.target.id);
+                          console.log(cloneindexDefaulAddress);
+                          console.log(e);
+                        }}
+                      />
+                      <div>
+                        <p>
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {value.accountId}
+                          </span>
+                          <span>| {value.soDienThoai}</span>
+                        </p>
+                        <p>
+                          {value.buildingName}, {value.areaName} Vinhomes GP
+                        </p>
+                      </div>
                     </div>
-                    {value.isDefault ? (
-                      <>
-                        <button
-                          style={{
-                            lineHeight: "40px",
-                            background: "none",
-                            fontSize: "16px",
-                            border: "1px solid var(--primary) ",
-                            borderRadius: "4px",
-                            padding: "0px 8px",
-                          }}
-                        >
-                          Mặc định
-                        </button>
-                      </>
-                    ) : (
-                      <></>
-                    )}
+
+                    <button
+                      style={{
+                        width: "100px",
+                        lineHeight: "30px",
+                        background: "none",
+                        fontSize: "16px",
+                        border: "1px solid var(--primary) ",
+                        borderRadius: "4px",
+                        display: `${value.isDefault === 1 ? "block" : "none"}`,
+                      }}
+                    >
+                      Mặc định
+                    </button>
                   </label>
                 </>
               );

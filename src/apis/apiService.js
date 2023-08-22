@@ -246,3 +246,10 @@ export const getOrdersbyPhone = (index, size, phone) => {
     }
   );
 };
+// https://api.vhgp.net/api/v1/account-building/address-default?id=8
+export const setDefaultAddress = (id) => {
+  return axios.put(`${BASE_URL}account-building/address-default?id=${id}`, {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  });
+};

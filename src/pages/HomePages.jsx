@@ -235,7 +235,7 @@ const HomePage = ({ productItems, shopItems }) => {
                 if (userInfo.building && userInfo.fullName && userInfo.phone) {
                   setVisiblePopupInfo(false);
 
-                  history.push(`/mode/${2}/menu/`, { home: true });
+                  history.push(`/mode/${2}`, { home: true });
                   setisLoadigFromHome(true);
                 } else {
                   setVisiblePopupInfo(true);
