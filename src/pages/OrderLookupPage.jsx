@@ -1205,7 +1205,7 @@ const OrderLookupPage = () => {
                           paddingBottom: 10,
                         }}
                       >
-                        Chi tiết thanh toán 2
+                        Chi tiết thanh toán
                       </h3>
 
                       {/* <div className="order-detail-total">
@@ -1345,12 +1345,7 @@ const OrderLookupPage = () => {
                               gap: 3,
                             }}
                           >
-                            {orderInfo.serviceId === "1"
-                              ? Number(orderInfo.shipCost.toLocaleString()) -
-                                10 +
-                                ".000"
-                              : Number(orderInfo.shipCost.toLocaleString()) +
-                                ".000"}
+                            {orderInfo.shipCost.toLocaleString()}
                             <span
                               style={{
                                 fontSize: mobileMode ? "0.8rem" : "0.9rem",
@@ -1362,7 +1357,7 @@ const OrderLookupPage = () => {
                           </span>
                         </div>
                       </div>
-                      {orderInfo.serviceId === "1" ? (
+                      {/* {orderInfo.serviceId === "1" ? (
                         <div
                           className="order-detail-total"
                           style={{ paddingBottom: 15 }}
@@ -1420,7 +1415,7 @@ const OrderLookupPage = () => {
                             </span>
                           </div>
                         </div>
-                      )}
+                      )} */}
                       <div
                         className="order-detail-total"
                         style={{
