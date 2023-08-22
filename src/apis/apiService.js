@@ -263,4 +263,24 @@ export const setDefaultAddress = (id) => {
     "Content-Type": "application/json",
   });
 };
-// https://api.vhgp.net/api/v1/account-management/accounts?username=endy&pass=12345689&name=endy&imageUrl=null
+// {
+//   "accountBuildId": 0,
+//   "accountId": "string",
+//   "buildingId": "string",
+//   "isDefault": 0,
+//   "soDienThoai": "string",
+//   "name": "string"
+// }
+export const addAddressBuilding = (AddressBuilding) => {
+  return axios.post(`${BASE_URL}account-building`, AddressBuilding, {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  });
+};
+// https://api.vhgp.net/api/v1/account-building/17
+export const deleteAddressBuilding = (ID) => {
+  return axios.delete(`${BASE_URL}account-building/${ID}`, {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  });
+};
