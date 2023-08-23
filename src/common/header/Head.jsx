@@ -62,6 +62,8 @@ const Head = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValidSignup, setIsValidSignup] = useState("0");
   const [statusAddress, setStatusAddress] = useState("2");
+  const [indexDefaultAddress, setIndexDefaultAddress] = useState(-1);
+  const [cloneindexDefaultAddress, setCloneIndexDefaultAddress] = useState(-1);
   // "1" là đang add, "2 là đang sửa"
   let history = useHistory();
   const openDrawer = () => {
@@ -169,25 +171,40 @@ const Head = () => {
     }
     if (isValid) {
       setVisiblePopupInfo(false);
-      if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))) {
-        localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
-        setUserInfo({});
-      } else {
-        localStorage.setItem(
-          LOCALSTORAGE_USER_NAME,
-          JSON.stringify({
-            fullName,
-            phone,
-            building,
-            area,
-            apartment,
-          })
-        );
-        setUserInfo({ fullName, phone, building, area, apartment });
-      }
+      // if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))) {
+      //   localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
+      //   setUserInfo({});
+      // } else {
+      localStorage.setItem(
+        LOCALSTORAGE_USER_NAME,
+        JSON.stringify({
+          fullName,
+          phone,
+          building,
+          area,
+          apartment,
+        })
+      );
+      setUserInfo({ fullName, phone, building, area, apartment });
+      // }
       if (mode === 1 || mode === 2 || mode === 3) {
+        console.log("oke");
         history.push(`/mode/${mode}`);
       }
+    }
+  };
+  const handleCancel = () => {
+    const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME));
+    if (JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME)).length !== 0) {
+      setUserInfo(user);
+      console.log("m zô đây rồi");
+      //   // setUserInfo({ fullName, phone, building, area, apartment });
+      // valid hết đi
+      setIsValidFullname(false);
+      setIsValidPhone(false);
+      setIsValidBuilding(false);
+      setIsValidApartment(false);
+      setIsValidArea(false);
     }
   };
   const handleAddress = (defaultData) => {
@@ -234,6 +251,7 @@ const Head = () => {
         if (resBuilding.status === 200) {
           if (resBuilding.data.length === 0) {
             setVisiblePopupInfo(true);
+            // hiện lên để thêm địa chỉ mới
           } else {
             setListAddress(resBuilding.data);
             setOpenSelectAddress(true);
@@ -269,23 +287,18 @@ const Head = () => {
       });
     } else if (res.status === 200 && res.data.roleId !== "2") {
       setIsValidLogin("2");
+      // ko dc phép vào cái trang này rồi....
     } else {
       // Wrong information sign-up
       setIsValidLogin("1");
     }
-
-    console.log(cloneindexDefaulAddress);
-    if (indexDefaulAddress !== cloneindexDefaulAddress) {
-      console.log("đổi default");
-    } else {
-      console.log("khong doi");
-    }
   };
 
   function validatePhoneNumber(input_str) {
-    var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+    const length = input_str.length;
 
-    return re.test(input_str);
+    if ((length > 8) & (length < 12)) return true;
+    else return false;
   }
   return (
     <>
@@ -307,11 +320,13 @@ const Head = () => {
         width={mobileMode ? 350 : 400}
         visible={visiblePopupInfo}
         onClose={() => {
+          // đây là form sửa địa chỉ thôi, default chọn rồi.....
           setVisiblePopupInfo(false);
           // setIsValid(true);
-          setIsValidBuilding(false);
-          setIsValidFullname(false);
-          setIsValidPhone(false);
+          // setIsValidBuilding(false);
+          // setIsValidFullname(false);
+          // setIsValidPhone(false);
+          handleCancel();
           if (isLogin) {
             handleSubmit();
           }
@@ -345,10 +360,14 @@ const Head = () => {
                 options={optionArea}
                 placeholder="Khu vực"
                 onChange={(e) => {
+                  // khi set lại Area thì 2 cái sau phải reset lại,.....
                   setArea(e);
-                  setApartment("");
-                  setBuilding("");
-                  setBuldingList([]);
+
+                  if (e.label !== area.label) {
+                    setApartment("");
+                    setBuilding("");
+                    setBuldingList([]);
+                  }
                 }}
                 value={area}
               />
@@ -363,16 +382,27 @@ const Head = () => {
             <div className={`${isValidApartment && "error-select"}`}>
               <Select
                 options={optionsApartment}
-                placeholder="Tòa nhà"
+                placeholder="Cụm tòa nhà"
                 onChange={(e) => {
                   setApartment(e);
-                  setBuilding("");
-                  for (let index = 0; index < apartmentList.length; index++) {
-                    const element = apartmentList[index];
-                    if (element.id === e.value) {
-                      setBuldingList(element.listBuilding);
-                    }
+
+                  if (apartment.label !== e.label) {
+                    setBuilding("");
                   }
+                  // for (let index = 0; index < apartmentList.length; index++) {
+                  //   const element = apartmentList[index];
+                  //   if (element.id === e.value) {
+                  //     setBuldingList(element.listBuilding);
+                  //   }
+                  // }
+                  const foundIndexApartmentList = apartmentList.findIndex(
+                    (element) => {
+                      return element.id === e.value;
+                    }
+                  );
+                  setBuldingList(
+                    apartmentList[foundIndexApartmentList].listBuilding
+                  );
                 }}
                 value={apartment}
               />
@@ -464,7 +494,7 @@ const Head = () => {
           ) &&
             !isValidPhoneRegex && (
               <div className="input-validate-form">
-                <span>Số điện thoại không hơp lệ</span>
+                <span>Số điện thoại không hợp lệ</span>
               </div>
             )}
           <div
@@ -492,6 +522,7 @@ const Head = () => {
                 }
                 e.preventDefault();
                 setVisiblePopupInfo(false);
+                handleCancel();
               }}
             >
               Đóng
@@ -1045,8 +1076,9 @@ const Head = () => {
               onClick={(e) => {
                 e.preventDefault();
                 // set Defaut
-                setIsLogin(false);
                 localStorage.clear();
+                setIsLogin(false);
+                setUserInfo([]);
                 history.push("/");
                 setIsConfirmLogOut(false);
               }}
@@ -1093,7 +1125,6 @@ const Head = () => {
                 onClick={() => {
                   setVisiblePopupInfo(true);
                   // test
-                  console.log(area);
                 }}
                 disabled={visiblePopupInfo}
                 value={

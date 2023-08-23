@@ -61,7 +61,6 @@ export default function AppProvider({ children }) {
   let history = useHistory();
   // const { productItems } = Data;
   useEffect(() => {
-    console.log(userInfo.phone);
     getOrdersbyPhone(1, 100, userInfo.phone)
       .then((res) => {
         console.log(res);
@@ -74,7 +73,8 @@ export default function AppProvider({ children }) {
         setAreaProvider([]);
         setisLoadingMain(false);
       });
-  }, [userInfo.phone, opentModalSuccess]);
+  }, [userInfo.phone]);
+
   useEffect(() => {
     getAreas(1, 100)
       .then((res) => {
@@ -155,21 +155,23 @@ export default function AppProvider({ children }) {
       localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
       setUserInfo({});
       history.push("/");
+      // Khi vào ko có thì set vậy lun, luôn có key....
+      // push đó là khi mà ko có thì nó ra trang chủ thoy
     } else {
       const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME));
-
       if (Object.keys(user).length === 0) {
         history.push("/");
       }
-
       setUserInfo(user);
+      // có user ngon :V
     }
-
+    // chỉ để làm user thoy
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
       setIsLogin(false);
     } else {
       setIsLogin(true);
     }
+    // xem đăng nhập chưa ?
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_HiSTORY_SEARCH))) {
       localStorage.setItem(
         LOCALSTORAGE_HiSTORY_SEARCH,
@@ -180,7 +182,7 @@ export default function AppProvider({ children }) {
       // setUserInfo(user);
     }
     return () => {};
-  }, [isLogin, history]);
+  }, [history]);
 
   // useEffect(() => {
   //     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
