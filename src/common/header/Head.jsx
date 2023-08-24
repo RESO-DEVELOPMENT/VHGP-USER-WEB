@@ -89,8 +89,11 @@ const Head = () => {
       const foundDefaultIDaddress = listAddress.findIndex(
         (value) => value.isDefault === 1
       );
-      cloneIdDefaultAddress = listAddress[foundDefaultIDaddress].accountBuildId;
-      setDefaulAddressID(cloneIdDefaultAddress);
+      if (foundDefaultIDaddress !== -1) {
+        cloneIdDefaultAddress =
+          listAddress[foundDefaultIDaddress].accountBuildId;
+        setDefaulAddressID(cloneIdDefaultAddress);
+      }
     }
   }, [listAddress]);
   useEffect(() => {
@@ -892,7 +895,7 @@ const Head = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-
+            height: "calc(90% + 20px) ",
             maxHeight: "calc(90% + 20px) ",
           }}
         >
