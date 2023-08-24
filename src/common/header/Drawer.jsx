@@ -167,7 +167,7 @@ export const DrawerContent = () => {
             >
               <i className="fa-solid fa-lock"></i>
             </div>
-            <h4>Privacy & Policy</h4>
+            <h4>Điều khoản dịch vụ</h4>
           </div>
         </Link>
         {isLogin === true ? (

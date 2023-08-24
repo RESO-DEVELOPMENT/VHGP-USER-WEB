@@ -158,19 +158,21 @@ export default function AppProvider({ children }) {
       // Khi vào ko có thì set vậy lun, luôn có key....
       // push đó là khi mà ko có thì nó ra trang chủ thoy
     } else {
+      // có user thì mới có thẻ là đã đăng nhập ko thì auto chưa
       const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME));
       if (Object.keys(user).length === 0) {
         history.push("/");
       }
       setUserInfo(user);
+      if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
+        setIsLogin(false);
+      } else {
+        setIsLogin(true);
+      }
       // có user ngon :V
     }
     // chỉ để làm user thoy
-    if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
-      setIsLogin(false);
-    } else {
-      setIsLogin(true);
-    }
+
     // xem đăng nhập chưa ?
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_HiSTORY_SEARCH))) {
       localStorage.setItem(

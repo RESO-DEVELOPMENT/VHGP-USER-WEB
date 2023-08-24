@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import Rodal from "rodal";
@@ -37,7 +43,6 @@ const Head = () => {
     isConfirmLogOut,
     setIsConfirmLogOut,
   } = useContext(AppContext);
-  let indexDefaulAddress, cloneindexDefaulAddress;
 
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -61,10 +66,20 @@ const Head = () => {
   const [openSelectAddress, setOpenSelectAddress] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValidSignup, setIsValidSignup] = useState("0");
-  const [statusAddress, setStatusAddress] = useState("2");
-  const [indexDefaultAddress, setIndexDefaultAddress] = useState(-1);
-  const [cloneindexDefaultAddress, setCloneIndexDefaultAddress] = useState(-1);
-  // "1" là đang add, "2 là đang sửa"
+  const [defaulAddressID, setDefaulAddressID] = useState(-1);
+
+  // const [indexDefaultAddress, setIndexDefaultAddress] = useState(-1);
+  let cloneIdDefaultAddress;
+  useEffect(() => {
+    if (listAddress.length >= 1) {
+      const foundDefaultIDaddress = listAddress.findIndex(
+        (value) => value.isDefault === 1
+      );
+      cloneIdDefaultAddress = listAddress[foundDefaultIDaddress].accountBuildId;
+      setDefaulAddressID(cloneIdDefaultAddress);
+    }
+  }, [listAddress]);
+
   let history = useHistory();
   const openDrawer = () => {
     setIsOpenDrawer(true);
@@ -188,7 +203,6 @@ const Head = () => {
       setUserInfo({ fullName, phone, building, area, apartment });
       // }
       if (mode === 1 || mode === 2 || mode === 3) {
-        console.log("oke");
         history.push(`/mode/${mode}`);
       }
     }
@@ -207,9 +221,15 @@ const Head = () => {
       setIsValidArea(false);
     }
   };
-  const handleAddress = (defaultData) => {
+  const handleAddress = (IDaccountBuilding) => {
+    console.log(IDaccountBuilding);
+    const foundindex = listAddress.findIndex(
+      (value) => value.accountBuildId == IDaccountBuilding
+    );
+    console.log(foundindex);
+    const defaultData = listAddress[foundindex];
     console.log(defaultData);
-    setFullName(defaultData.accountId);
+    setFullName(defaultData.name);
     setPhone(defaultData.soDienThoai);
     setArea({ value: defaultData.areaId, label: defaultData.areaName });
     setApartment({
@@ -220,14 +240,22 @@ const Head = () => {
       value: defaultData.buildingId,
       label: defaultData.buildingName,
     });
-    setOpenSelectAddress(true);
-    setDefaultAddress(defaultData.accountBuildId)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setUserInfo({ fullName, phone, building, area, apartment });
+
+    console.log({ fullName, phone, building, area, apartment });
+
+    if (defaultData.accountBuildId !== defaulAddressID) {
+      console.log("khác nè");
+      setDefaultAddress(defaultData.accountBuildId)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log("same");
+    }
   };
 
   const handleLogin = (res) => {
@@ -255,9 +283,6 @@ const Head = () => {
           } else {
             setListAddress(resBuilding.data);
             setOpenSelectAddress(true);
-
-            // setUserInfo({ fullName, phone, building, area, apartment });
-            // setVisiblePopupInfo(true);
           }
         }
         //
@@ -300,6 +325,7 @@ const Head = () => {
     if ((length > 8) & (length < 12)) return true;
     else return false;
   }
+
   return (
     <>
       <Rodal
@@ -853,8 +879,11 @@ const Head = () => {
         width={mobileMode ? 350 : 400}
         visible={openSelectAddress}
         onClose={() => {
-          handleAddress(listAddress[cloneindexDefaulAddress]);
-          setVisiblePopupInfo(true);
+          if (defaulAddressID >= 0) {
+            // console.log()
+
+            handleAddress(defaulAddressID);
+          }
           setOpenSelectAddress(false);
         }}
         style={{ borderRadius: 10 }}
@@ -883,11 +912,7 @@ const Head = () => {
               gap: "15px",
             }}
           >
-            {listAddress.map((value, index) => {
-              if (value.isDefault == 1) {
-                indexDefaulAddress = index;
-                cloneindexDefaulAddress = index;
-              }
+            {listAddress.map((value) => {
               return (
                 <>
                   <label
@@ -907,12 +932,16 @@ const Head = () => {
                       <input
                         type="radio"
                         name="topic"
-                        id={index}
+                        id={value.accountBuildId}
                         defaultChecked={value.isDefault === 1 ? true : false}
-                        onClick={(e) => {
-                          cloneindexDefaulAddress = Number(e.target.id);
-                          console.log(cloneindexDefaulAddress);
-                          console.log(e);
+                        // onClick={(e) => {
+                        //   cloneindexDefaulAddress = Number(e.target.id);
+                        //   console.log(cloneindexDefaulAddress);
+                        //   console.log(e);
+                        // }
+                        onChange={(e) => {
+                          cloneIdDefaultAddress = e.target.id;
+                          console.log(cloneIdDefaultAddress);
                         }}
                       />
                       <div>
@@ -922,7 +951,7 @@ const Head = () => {
                               fontWeight: "bold",
                             }}
                           >
-                            {value.accountId}
+                            {value.name}
                           </span>
                           <span>| {value.soDienThoai}</span>
                         </p>
@@ -959,7 +988,7 @@ const Head = () => {
               gap: 15,
             }}
           >
-            <button
+            {/* <button
               style={{
                 flex: 1,
                 padding: 14,
@@ -972,20 +1001,24 @@ const Head = () => {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                handleAddress(listAddress[indexDefaulAddress]);
+                handleAddress(listAddress[defaulAddressID]);
                 setVisiblePopupInfo(true);
                 setOpenSelectAddress(false);
               }}
             >
               Đóng
-            </button>
+            </button> */}
             <button
               onClick={(e) => {
                 e.preventDefault();
-
                 // set Defaut
-                handleAddress(listAddress[cloneindexDefaulAddress]);
-                setVisiblePopupInfo(true);
+
+                if (cloneIdDefaultAddress >= 0) {
+                  handleAddress(cloneIdDefaultAddress);
+                } else {
+                  handleAddress(defaulAddressID);
+                }
+
                 setOpenSelectAddress(false);
               }}
               style={{
@@ -1123,7 +1156,9 @@ const Head = () => {
                 type="text"
                 placeholder="Nhập địa chỉ giao hàng"
                 onClick={() => {
-                  setVisiblePopupInfo(true);
+                  isLogin
+                    ? setOpenSelectAddress(true)
+                    : setVisiblePopupInfo(true);
                   // test
                 }}
                 disabled={visiblePopupInfo}
