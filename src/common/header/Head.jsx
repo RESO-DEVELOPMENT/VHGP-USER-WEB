@@ -51,7 +51,7 @@ const Head = () => {
   const [apartment, setApartment] = useState("");
   const [apartmentList, setApartmentList] = useState([]);
   const [buldingList, setBuldingList] = useState([]);
-  const [user, setUser] = useState({});
+  // const [user, setUser] = useState({});
   const [isValidFullName, setIsValidFullname] = useState(false);
   const [isValidPhone, setIsValidPhone] = useState(false);
   const [isValidPhoneRegex, setIsValidPhoneRegex] = useState(true);
@@ -88,7 +88,7 @@ const Head = () => {
   };
 
   useEffect(() => {
-    setUser(userInfo);
+    // setUser(userInfo);
     setFullName(userInfo.fullName || "");
     setPhone(userInfo.phone || "");
     setBuilding(userInfo.building || "");
@@ -229,21 +229,43 @@ const Head = () => {
     console.log(foundindex);
     const defaultData = listAddress[foundindex];
     console.log(defaultData);
-    setFullName(defaultData.name);
-    setPhone(defaultData.soDienThoai);
-    setArea({ value: defaultData.areaId, label: defaultData.areaName });
-    setApartment({
-      value: defaultData.clusterId,
-      label: defaultData.clusterName,
+    // setFullName(defaultData.name);
+    // setPhone(defaultData.soDienThoai);
+    // setArea({ value: defaultData.areaId, label: defaultData.areaName });
+    // setApartment({
+    //   value: defaultData.clusterId,
+    //   label: defaultData.clusterName,
+    // });
+    // setBuilding({
+    //   value: defaultData.buildingId,
+    //   label: defaultData.buildingName,
+    // });
+    setUserInfo({
+      fullName: defaultData.name,
+      phone: defaultData.soDienThoai,
+      building: {
+        value: defaultData.buildingId,
+        label: defaultData.buildingName,
+      },
+      area: { value: defaultData.areaId, label: defaultData.areaName },
+      apartment: {
+        value: defaultData.clusterId,
+        label: defaultData.clusterName,
+      },
     });
-    setBuilding({
-      value: defaultData.buildingId,
-      label: defaultData.buildingName,
+    console.log({
+      fullName: defaultData.name,
+      phone: defaultData.soDienThoai,
+      building: {
+        value: defaultData.buildingId,
+        label: defaultData.buildingName,
+      },
+      area: { value: defaultData.areaId, label: defaultData.areaName },
+      apartment: {
+        value: defaultData.clusterId,
+        label: defaultData.clusterName,
+      },
     });
-    setUserInfo({ fullName, phone, building, area, apartment });
-
-    console.log({ fullName, phone, building, area, apartment });
-
     if (defaultData.accountBuildId !== defaulAddressID) {
       console.log("khác nè");
       setDefaultAddress(defaultData.accountBuildId)
@@ -978,6 +1000,21 @@ const Head = () => {
                 </>
               );
             })}
+            <button
+              style={{
+                lineHeight: "30px",
+                background: "none",
+                fontSize: "16px",
+                border: "1px solid #333 ",
+                borderRadius: "4px",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenSelectAddress(false);
+              }}
+            >
+              + Thêm địa chỉ mới
+            </button>
           </div>
           <div
             className="f_flex rodal-delet-cart"
@@ -1163,8 +1200,8 @@ const Head = () => {
                 }}
                 disabled={visiblePopupInfo}
                 value={
-                  user.building
-                    ? ` ${user.building.label}  `
+                  userInfo.building
+                    ? ` ${userInfo.building.label}  `
                     : "Nhập địa chỉ nhận hàng nhanh"
                 }
                 readOnly={true}
