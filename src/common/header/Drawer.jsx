@@ -19,7 +19,7 @@ export const DrawerContent = () => {
     setIsOpenLogin,
     setIsOpenSignup,
     setIsConfirm,
-
+    setOpenSelectAddress,
     contentIsConfirm,
     setContentIsConfirm,
   } = React.useContext(AppContext);
@@ -43,7 +43,67 @@ export const DrawerContent = () => {
           </div>
         </div>
         {isLogin === true ? (
-          <></>
+          <>
+            <Link
+              to={"/"}
+              onClick={() => {
+                setIsOpenDrawer(false);
+                setContentIsConfirm("Bạn có muốn đăng xuất ?");
+                setIsConfirm(true);
+              }}
+              style={{ order: 1 }}
+            >
+              <div
+                className="drawer__wrapper__item"
+                style={{ justifyContent: "start", gap: 10 }}
+              >
+                <div
+                  className="center_flex"
+                  style={{
+                    background: "rgb(230, 30 ,30)",
+                    color: "#fff",
+                    width: 27,
+                    height: 27,
+                    borderRadius: 50,
+                  }}
+                >
+                  <i
+                    style={{ fontSize: 13, marginLeft: 2 }}
+                    class="fa-solid fa-right-to-bracket"
+                  ></i>
+                </div>
+                <h4>Đăng xuất</h4>
+              </div>
+            </Link>
+            <button
+              onClick={() => {
+                setOpenSelectAddress(true);
+                setIsOpenDrawer(false);
+              }}
+              style={{
+                width: "100%",
+              }}
+            >
+              <div
+                className="drawer__wrapper__item"
+                style={{ justifyContent: "start", gap: 10 }}
+              >
+                <div
+                  className="center_flex"
+                  style={{
+                    background: "rgb(200,200,30)",
+                    color: "#333",
+                    width: 27,
+                    height: 27,
+                    borderRadius: 50,
+                  }}
+                >
+                  <i class="fa-regular fa-address-book"></i>
+                </div>
+                <h4>Chọn địa chỉ</h4>
+              </div>
+            </button>
+          </>
         ) : (
           <>
             <Link
@@ -173,7 +233,7 @@ export const DrawerContent = () => {
             <h4>Điều khoản dịch vụ</h4>
           </div>
         </Link>
-        {isLogin === true ? (
+        {/* {isLogin === true ? (
           <>
             <Link
               to={"/"}
@@ -209,7 +269,7 @@ export const DrawerContent = () => {
           </>
         ) : (
           <></>
-        )}
+        )} */}
         {orderDrawer.length > 0 && (
           <>
             <div style={{ padding: "20px 10px 10px 10px" }}>

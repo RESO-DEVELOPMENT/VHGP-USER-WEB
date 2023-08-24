@@ -63,6 +63,7 @@ export default function AppProvider({ children }) {
   const [isConfirm, setIsConfirm] = useState(false);
   const [contentIsConfirm, setContentIsConfirm] = useState("");
   const [listAddress, setListAddress] = useState([]);
+  const [openSelectAddress, setOpenSelectAddress] = useState(false);
   // const [auth, setAuth] = useState({});
   let location = useLocation();
   let history = useHistory();
@@ -381,6 +382,8 @@ export default function AppProvider({ children }) {
         setContentIsConfirm,
         listAddress,
         setListAddress,
+        openSelectAddress,
+        setOpenSelectAddress,
       }}
     >
       {children}

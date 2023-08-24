@@ -48,6 +48,8 @@ const Head = () => {
     setContentIsConfirm,
     listAddress,
     setListAddress,
+    openSelectAddress,
+    setOpenSelectAddress,
   } = useContext(AppContext);
 
   const [fullName, setFullName] = useState("");
@@ -69,7 +71,6 @@ const Head = () => {
   const [isValidLogin, setIsValidLogin] = useState("0");
   // 0 is oke, 1 is... , 2 is...
 
-  const [openSelectAddress, setOpenSelectAddress] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValidSignup, setIsValidSignup] = useState("0");
   const [defaulAddressID, setDefaulAddressID] = useState(-1);
@@ -85,7 +86,7 @@ const Head = () => {
   };
 
   useEffect(() => {
-    if (listAddress.length >= 1) {
+    if (listAddress.length >= 1 && isLogin) {
       const foundDefaultIDaddress = listAddress.findIndex(
         (value) => value.isDefault === 1
       );
@@ -967,7 +968,6 @@ const Head = () => {
                         }}
                         onClick={(e) => {
                           setCloneIdDeleteAddress(e.target.id);
-
                           setContentIsConfirm(
                             "Bạn có muốn xóa địa chỉ này không ?"
                           );
@@ -1132,9 +1132,9 @@ const Head = () => {
                   deleteAddressBuilding(Number(cloneIdDeleteAddress))
                     .then((res) => {
                       console.log(res);
+                      handleGetAccountBuilding();
                     })
                     .finally(setIsConfirm(false));
-                  handleGetAccountBuilding();
                 } else {
                   localStorage.clear();
                   setIsLogin(false);
