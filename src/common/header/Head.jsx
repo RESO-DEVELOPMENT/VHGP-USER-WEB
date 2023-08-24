@@ -12,6 +12,7 @@ import {
   Login,
   SignUp,
   addAddressBuilding,
+  deleteAddressBuilding,
   getAccountBuilding,
   getApartment,
   postAccountBuilding,
@@ -45,6 +46,8 @@ const Head = () => {
     setIsConfirm,
     contentIsConfirm,
     setContentIsConfirm,
+    listAddress,
+    setListAddress,
   } = useContext(AppContext);
 
   const [fullName, setFullName] = useState("");
@@ -65,14 +68,22 @@ const Head = () => {
   const [password, setPassword] = useState("");
   const [isValidLogin, setIsValidLogin] = useState("0");
   // 0 is oke, 1 is... , 2 is...
-  const [listAddress, setListAddress] = useState([]);
+
   const [openSelectAddress, setOpenSelectAddress] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValidSignup, setIsValidSignup] = useState("0");
   const [defaulAddressID, setDefaulAddressID] = useState(-1);
-
+  const [cloneIdDeleteAddress, setCloneIdDeleteAddress] = useState(-1);
   // const [indexDefaultAddress, setIndexDefaultAddress] = useState(-1);
   let cloneIdDefaultAddress;
+
+  let history = useHistory();
+  const openDrawer = () => {
+    setIsOpenDrawer(true);
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+  };
+
   useEffect(() => {
     if (listAddress.length >= 1) {
       const foundDefaultIDaddress = listAddress.findIndex(
@@ -82,14 +93,6 @@ const Head = () => {
       setDefaulAddressID(cloneIdDefaultAddress);
     }
   }, [listAddress]);
-
-  let history = useHistory();
-  const openDrawer = () => {
-    setIsOpenDrawer(true);
-    document.body.style.overflow = "hidden";
-    document.body.style.touchAction = "none";
-  };
-
   useEffect(() => {
     // setUser(userInfo);
     setFullName(userInfo.fullName || "");
@@ -188,7 +191,6 @@ const Head = () => {
       setIsValidPhoneRegex(false);
     }
     if (isValid) {
-      setVisiblePopupInfo(false);
       // if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))) {
       //   localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
       //   setUserInfo({});
@@ -204,12 +206,15 @@ const Head = () => {
 
         addAddressBuilding(bodyaddBuilding)
           .then((res) => {
-            console.log(res);
+            setVisiblePopupInfo(false);
+            handleGetAccountBuilding();
+            setOpenSelectAddress(true);
           })
           .catch((res) => {
             console.log(res);
           });
       } else {
+        setVisiblePopupInfo(false);
         localStorage.setItem(
           LOCALSTORAGE_USER_NAME,
           JSON.stringify({
@@ -228,7 +233,18 @@ const Head = () => {
       }
     }
   };
-
+  const handleGetAccountBuilding = () => {
+    getAccountBuilding(
+      1,
+      10,
+      JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_ID))
+    ).then((resBuilding) => {
+      if (resBuilding.status === 200) {
+        setListAddress(resBuilding.data);
+        setOpenSelectAddress(true);
+      }
+    });
+  };
   const handleAddress = (IDaccountBuilding) => {
     console.log(IDaccountBuilding);
     const foundindex = listAddress.findIndex(
@@ -283,49 +299,13 @@ const Head = () => {
         LOCALSTORAGE_USER_LOGIN,
         JSON.stringify(JSON.stringify(true))
       );
-      localStorage.setItem(
-        LOCALSTORAGE_USER_ID,
-        JSON.stringify(JSON.stringify(userName))
-      );
+      localStorage.setItem(LOCALSTORAGE_USER_ID, JSON.stringify(res.data.id));
 
       setIsLogin(true);
       setIsOpenLogin(false);
 
       // get information
-      getAccountBuilding(1, 10, userName).then((resBuilding) => {
-        if (resBuilding.status === 200) {
-          if (resBuilding.data.length === 0) {
-            setVisiblePopupInfo(true);
-          } else {
-            setListAddress(resBuilding.data);
-            setOpenSelectAddress(true);
-          }
-        }
-        //
-        // old
-        // apartment
-        // :
-        // {value: "2", label: "S2"}
-        // area
-        // :
-        // {value: "2", label: "Rainbow"}
-        // building
-        // :
-        // {value: "b10", label: "S2.05"}
-        // fullName
-        // :
-        // "hoan"
-        // phone
-        // :
-        // "1234566788"
-        // new
-        // setArea(data.areaName);
-        //
-        // localStorage.setItem(
-        //   LOCALSTORAGE_USER_NAME,
-        //   JSON.stringify({ fullName, phone })
-        // );
-      });
+      handleGetAccountBuilding();
     } else if (res.status === 200 && res.data.roleId !== "2") {
       setIsValidLogin("2");
       // ko dc phép vào cái trang này rồi....
@@ -363,6 +343,9 @@ const Head = () => {
         visible={visiblePopupInfo}
         onClose={() => {
           setVisiblePopupInfo(false);
+          if (isLogin) {
+            setOpenSelectAddress(true);
+          }
         }}
         style={{ borderRadius: 10 }}
       >
@@ -554,6 +537,9 @@ const Head = () => {
               onClick={(e) => {
                 e.preventDefault();
                 setVisiblePopupInfo(false);
+                if (isLogin) {
+                  setOpenSelectAddress(true);
+                }
               }}
             >
               Đóng
@@ -906,7 +892,9 @@ const Head = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            height: "100%",
+
+            height: "calc(90% + 20px) ",
+            maxHeight: "calc(90% + 20px) ",
           }}
         >
           <div
@@ -914,7 +902,10 @@ const Head = () => {
               marginTop: "16px",
               display: "flex",
               flexDirection: "column",
+              flexGrow: "1",
               gap: "15px",
+              overflowY: listAddress.length > 5 ? "scroll" : null,
+              padding: mobileMode ? "0px 12px 40px" : "0px 20px 50px",
             }}
           >
             {listAddress.map((value) => {
@@ -932,12 +923,13 @@ const Head = () => {
                         display: "flex",
                         flexDirection: "row",
                         gap: "15px",
+                        alignItems: "center",
                       }}
                     >
                       <input
                         type="radio"
                         name="topic"
-                        id={value.accountBuildId}
+                        tabIndex={value.accountBuildId}
                         defaultChecked={value.isDefault === 1 ? true : false}
                         // onClick={(e) => {
                         //   cloneindexDefaulAddress = Number(e.target.id);
@@ -945,11 +937,11 @@ const Head = () => {
                         //   console.log(e);
                         // }
                         onChange={(e) => {
-                          cloneIdDefaultAddress = e.target.id;
+                          cloneIdDefaultAddress = e.target.tabIndex;
                           console.log(cloneIdDefaultAddress);
                         }}
                       />
-                      <div>
+                      <div style={{ flexGrow: "1" }}>
                         <p>
                           <span
                             style={{
@@ -964,6 +956,24 @@ const Head = () => {
                           {value.buildingName}, {value.areaName} Vinhomes GP
                         </p>
                       </div>
+                      <button
+                        id={value.accountBuildId}
+                        style={{
+                          background: "none",
+                          padding: "4px",
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                          setCloneIdDeleteAddress(e.target.id);
+
+                          setContentIsConfirm(
+                            "Bạn có muốn xóa địa chỉ này không ?"
+                          );
+                          setIsConfirm(true);
+                        }}
+                      >
+                        <i class="fa-solid fa-x" id={value.accountBuildId}></i>
+                      </button>
                     </div>
 
                     <button
@@ -983,22 +993,6 @@ const Head = () => {
                 </>
               );
             })}
-            <button
-              style={{
-                lineHeight: "30px",
-                background: "none",
-                fontSize: "16px",
-                border: "1px solid #333 ",
-                borderRadius: "4px",
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setOpenSelectAddress(false);
-                setVisiblePopupInfo(true);
-              }}
-            >
-              + Thêm địa chỉ mới
-            </button>
           </div>
           <div
             className="f_flex rodal-delet-cart"
@@ -1009,8 +1003,9 @@ const Head = () => {
               gap: 15,
             }}
           >
-            {/* <button
+            <button
               style={{
+                background: "black",
                 flex: 1,
                 padding: 14,
                 fontSize: "1rem",
@@ -1018,17 +1013,16 @@ const Head = () => {
                 fontWeight: 700,
                 borderRadius: 10,
                 height: 45,
-                display: "none",
               }}
               onClick={(e) => {
                 e.preventDefault();
-                handleAddress(listAddress[defaulAddressID]);
+
                 setVisiblePopupInfo(true);
                 setOpenSelectAddress(false);
               }}
             >
-              Đóng
-            </button> */}
+              Thêm địa chỉ mới
+            </button>
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -1129,12 +1123,24 @@ const Head = () => {
             <button
               onClick={(e) => {
                 e.preventDefault();
+
+                if (
+                  contentIsConfirm === "Bạn có muốn xóa địa chỉ này không ?"
+                ) {
+                  deleteAddressBuilding(Number(cloneIdDeleteAddress))
+                    .then((res) => {
+                      console.log(res);
+                    })
+                    .finally(setIsConfirm(false));
+                  handleGetAccountBuilding();
+                } else {
+                  localStorage.clear();
+                  setIsLogin(false);
+                  setUserInfo([]);
+                  history.push("/");
+                  setIsConfirm(false);
+                }
                 // set Defaut
-                localStorage.clear();
-                setIsLogin(false);
-                setUserInfo([]);
-                history.push("/");
-                setIsConfirm(false);
               }}
               style={{
                 flex: 1,
@@ -1178,7 +1184,7 @@ const Head = () => {
                 placeholder="Nhập địa chỉ giao hàng"
                 onClick={() => {
                   isLogin
-                    ? setOpenSelectAddress(true)
+                    ? handleGetAccountBuilding()
                     : setVisiblePopupInfo(true);
                   // test
                 }}

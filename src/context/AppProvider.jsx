@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { getAreas, getOrdersbyPhone } from "../apis/apiService";
+import {
+  getAccountBuilding,
+  getAreas,
+  getOrdersbyPhone,
+} from "../apis/apiService";
 import {
   LOCALSTORAGE_CART_NAME1,
   LOCALSTORAGE_CART_NAME2,
@@ -8,6 +12,7 @@ import {
   LOCALSTORAGE_HiSTORY_SEARCH,
   LOCALSTORAGE_MODE,
   LOCALSTORAGE_ORDER,
+  LOCALSTORAGE_USER_ID,
   LOCALSTORAGE_USER_LOGIN,
   LOCALSTORAGE_USER_NAME,
 } from "../constants/Variable";
@@ -57,6 +62,7 @@ export default function AppProvider({ children }) {
   const [isLogin, setIsLogin] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
   const [contentIsConfirm, setContentIsConfirm] = useState("");
+  const [listAddress, setListAddress] = useState([]);
   // const [auth, setAuth] = useState({});
   let location = useLocation();
   let history = useHistory();
@@ -167,6 +173,15 @@ export default function AppProvider({ children }) {
         if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
           setIsLogin(false);
         } else {
+          getAccountBuilding(
+            1,
+            10,
+            JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_ID))
+          ).then((resBuilding) => {
+            if (resBuilding.status === 200) {
+              setListAddress(resBuilding.data);
+            }
+          });
           setIsLogin(true);
         }
       }
@@ -364,6 +379,8 @@ export default function AppProvider({ children }) {
         setIsConfirm,
         contentIsConfirm,
         setContentIsConfirm,
+        listAddress,
+        setListAddress,
       }}
     >
       {children}

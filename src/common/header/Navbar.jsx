@@ -397,9 +397,9 @@ const Navbar = () => {
                 className="f_flex cusor"
                 style={{ flexDirection: "column", gap: 2 }}
                 onClick={() => {
-                  headerInfo &&
-                    headerInfo.isSearchHeader &&
-                    setVisiblePopupInfo(true);
+                  // headerInfo &&
+                  //   headerInfo.isSearchHeader &&
+                  //   setVisiblePopupInfo(true);
                 }}
               >
                 {headerInfo && headerInfo.isSearchHeader ? (
