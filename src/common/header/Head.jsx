@@ -40,8 +40,10 @@ const Head = () => {
     isOpenSignup,
     setIsOpenLogin,
     setIsLogin,
-    isConfirmLogOut,
-    setIsConfirmLogOut,
+    isConfirm,
+    setIsConfirm,
+    contentIsConfirm,
+    setContentIsConfirm,
   } = useContext(AppContext);
 
   const [fullName, setFullName] = useState("");
@@ -190,45 +192,33 @@ const Head = () => {
       //   localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
       //   setUserInfo({});
       // } else {
-      localStorage.setItem(
-        LOCALSTORAGE_USER_NAME,
-        JSON.stringify({
-          fullName,
-          phone,
-          building,
-          area,
-          apartment,
-        })
-      );
-      setUserInfo({ fullName, phone, building, area, apartment });
-      // }
-      if (mode === 1 || mode === 2 || mode === 3) {
-        history.push(`/mode/${mode}`);
+      if (isLogin) {
+      } else {
+        localStorage.setItem(
+          LOCALSTORAGE_USER_NAME,
+          JSON.stringify({
+            fullName,
+            phone,
+            building,
+            area,
+            apartment,
+          })
+        );
+        setUserInfo({ fullName, phone, building, area, apartment });
+        // }
+        if (mode === 1 || mode === 2 || mode === 3) {
+          history.push(`/mode/${mode}`);
+        }
       }
     }
   };
-  const handleCancel = () => {
-    const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME));
-    if (JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME)).length !== 0) {
-      setUserInfo(user);
-      console.log("m zô đây rồi");
-      //   // setUserInfo({ fullName, phone, building, area, apartment });
-      // valid hết đi
-      setIsValidFullname(false);
-      setIsValidPhone(false);
-      setIsValidBuilding(false);
-      setIsValidApartment(false);
-      setIsValidArea(false);
-    }
-  };
+
   const handleAddress = (IDaccountBuilding) => {
     console.log(IDaccountBuilding);
     const foundindex = listAddress.findIndex(
       (value) => value.accountBuildId == IDaccountBuilding
     );
-    console.log(foundindex);
     const defaultData = listAddress[foundindex];
-    console.log(defaultData);
     // setFullName(defaultData.name);
     // setPhone(defaultData.soDienThoai);
     // setArea({ value: defaultData.areaId, label: defaultData.areaName });
@@ -301,7 +291,6 @@ const Head = () => {
         if (resBuilding.status === 200) {
           if (resBuilding.data.length === 0) {
             setVisiblePopupInfo(true);
-            // hiện lên để thêm địa chỉ mới
           } else {
             setListAddress(resBuilding.data);
             setOpenSelectAddress(true);
@@ -368,16 +357,7 @@ const Head = () => {
         width={mobileMode ? 350 : 400}
         visible={visiblePopupInfo}
         onClose={() => {
-          // đây là form sửa địa chỉ thôi, default chọn rồi.....
           setVisiblePopupInfo(false);
-          // setIsValid(true);
-          // setIsValidBuilding(false);
-          // setIsValidFullname(false);
-          // setIsValidPhone(false);
-          handleCancel();
-          if (isLogin) {
-            handleSubmit();
-          }
         }}
         style={{ borderRadius: 10 }}
       >
@@ -396,7 +376,9 @@ const Head = () => {
                 paddingBottom: "10px",
               }}
             >
-              <span style={{ fontSize: 16, fontWeight: 700 }}>Nơi nhận</span>
+              <span style={{ fontSize: 16, fontWeight: 700 }}>
+                {isLogin ? "Thêm địa chỉ mới" : "Nơi nhận"}
+              </span>
             </div>
             <div className="rodal-title" style={{ padding: "10px 0 10px 0" }}>
               <span style={{ fontSize: 16, fontWeight: 700 }}>
@@ -565,12 +547,8 @@ const Head = () => {
                 height: 45,
               }}
               onClick={(e) => {
-                if (isLogin) {
-                  handleSubmit();
-                }
                 e.preventDefault();
                 setVisiblePopupInfo(false);
-                handleCancel();
               }}
             >
               Đóng
@@ -1011,6 +989,7 @@ const Head = () => {
               onClick={(e) => {
                 e.preventDefault();
                 setOpenSelectAddress(false);
+                setVisiblePopupInfo(true);
               }}
             >
               + Thêm địa chỉ mới
@@ -1078,9 +1057,9 @@ const Head = () => {
       <Rodal
         height={200}
         width={mobileMode ? 350 : 400}
-        visible={isConfirmLogOut}
+        visible={isConfirm}
         onClose={() => {
-          setIsConfirmLogOut(false);
+          setIsConfirm(false);
         }}
         style={{ borderRadius: 10 }}
       >
@@ -1104,7 +1083,7 @@ const Head = () => {
           <p
             style={{ fontSize: "20px", textAlign: "center", marginTop: "8px" }}
           >
-            Bạn có muốn đăng xuất ?
+            {contentIsConfirm}
           </p>
         </div>
 
@@ -1137,7 +1116,7 @@ const Head = () => {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                setIsConfirmLogOut(false);
+                setIsConfirm(false);
               }}
             >
               Đóng
@@ -1150,7 +1129,7 @@ const Head = () => {
                 setIsLogin(false);
                 setUserInfo([]);
                 history.push("/");
-                setIsConfirmLogOut(false);
+                setIsConfirm(false);
               }}
               style={{
                 flex: 1,

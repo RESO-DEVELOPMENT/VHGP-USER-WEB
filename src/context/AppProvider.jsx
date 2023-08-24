@@ -55,7 +55,8 @@ export default function AppProvider({ children }) {
   const [buildings, setBuildings] = useState([]);
   const [orderDrawer, setOrdersDrawer] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
-  const [isConfirmLogOut, setIsConfirmLogOut] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [contentIsConfirm, setContentIsConfirm] = useState("");
   // const [auth, setAuth] = useState({});
   let location = useLocation();
   let history = useHistory();
@@ -357,8 +358,10 @@ export default function AppProvider({ children }) {
         setIsOpenSignup,
         isOpenLogin,
         setIsOpenLogin,
-        isConfirmLogOut,
-        setIsConfirmLogOut,
+        isConfirm,
+        setIsConfirm,
+        contentIsConfirm,
+        setContentIsConfirm,
       }}
     >
       {children}

@@ -18,7 +18,10 @@ export const DrawerContent = () => {
     orderDrawer,
     setIsOpenLogin,
     setIsOpenSignup,
-    setIsConfirmLogOut,
+    setIsConfirm,
+
+    contentIsConfirm,
+    setContentIsConfirm,
   } = React.useContext(AppContext);
   let history = useHistory();
 
@@ -176,7 +179,8 @@ export const DrawerContent = () => {
               to={"/"}
               onClick={() => {
                 setIsOpenDrawer(false);
-                setIsConfirmLogOut(true);
+                setContentIsConfirm("Bạn có muốn đăng xuất ?");
+                setIsConfirm(true);
               }}
               style={{ order: 1 }}
             >
