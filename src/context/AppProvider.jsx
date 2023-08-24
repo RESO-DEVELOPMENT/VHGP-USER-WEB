@@ -163,13 +163,15 @@ export default function AppProvider({ children }) {
       const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME));
       if (Object.keys(user).length === 0) {
         history.push("/");
+      } else {
+        if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
+          setIsLogin(false);
+        } else {
+          setIsLogin(true);
+        }
       }
       setUserInfo(user);
-      if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
-        setIsLogin(false);
-      } else {
-        setIsLogin(true);
-      }
+
       // có user ngon :V
     }
     // chỉ để làm user thoy

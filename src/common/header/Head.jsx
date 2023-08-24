@@ -11,6 +11,7 @@ import Rodal from "rodal";
 import {
   Login,
   SignUp,
+  addAddressBuilding,
   getAccountBuilding,
   getApartment,
   postAccountBuilding,
@@ -193,6 +194,21 @@ const Head = () => {
       //   setUserInfo({});
       // } else {
       if (isLogin) {
+        const bodyaddBuilding = {
+          accountId: JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_ID)),
+          buildingId: building.value,
+          isDefault: 0,
+          soDienThoai: phone,
+          name: fullName,
+        };
+
+        addAddressBuilding(bodyaddBuilding)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((res) => {
+            console.log(res);
+          });
       } else {
         localStorage.setItem(
           LOCALSTORAGE_USER_NAME,
@@ -230,7 +246,7 @@ const Head = () => {
     //   value: defaultData.buildingId,
     //   label: defaultData.buildingName,
     // });
-    setUserInfo({
+    const user = {
       fullName: defaultData.name,
       phone: defaultData.soDienThoai,
       building: {
@@ -242,22 +258,11 @@ const Head = () => {
         value: defaultData.clusterId,
         label: defaultData.clusterName,
       },
-    });
-    console.log({
-      fullName: defaultData.name,
-      phone: defaultData.soDienThoai,
-      building: {
-        value: defaultData.buildingId,
-        label: defaultData.buildingName,
-      },
-      area: { value: defaultData.areaId, label: defaultData.areaName },
-      apartment: {
-        value: defaultData.clusterId,
-        label: defaultData.clusterName,
-      },
-    });
+    };
+    setUserInfo(user);
+    localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify(user));
+
     if (defaultData.accountBuildId !== defaulAddressID) {
-      console.log("khác nè");
       setDefaultAddress(defaultData.accountBuildId)
         .then((res) => {
           console.log(res);
