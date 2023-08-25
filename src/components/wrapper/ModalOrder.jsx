@@ -24,13 +24,13 @@ export const SuccessModal = () => {
         }}
         style={{ borderRadius: 10, padding: 20 }}
       >
-        <div class="main-container">
+        <div className="main-container">
           <img
             src="https://i.pinimg.com/564x/86/fb/cd/86fbcdecb33bba33c132c46b6a53506a.jpg"
             alt=""
           />
-          <div class="check-container">
-            <div class="check-background">
+          <div className="check-container">
+            <div className="check-background">
               <svg
                 viewBox="0 0 65 51"
                 fill="none"
@@ -39,13 +39,13 @@ export const SuccessModal = () => {
                 <path
                   d="M7 25L27.3077 44L58.5 7"
                   stroke="white"
-                  stroke-width="13"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="13"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
-            <div class="check-shadow"></div>
+            <div className="check-shadow"></div>
           </div>
         </div>
         <div className="modal-success">

@@ -71,7 +71,6 @@ export default function AppProvider({ children }) {
   useEffect(() => {
     getOrdersbyPhone(1, 100, userInfo.phone)
       .then((res) => {
-        console.log(res);
         if (res.data) {
           setOrdersDrawer(res.data);
         }
@@ -81,7 +80,7 @@ export default function AppProvider({ children }) {
         setAreaProvider([]);
         setisLoadingMain(false);
       });
-  }, [userInfo.phone]);
+  }, [userInfo.phone, orderIdSuccess]);
 
   useEffect(() => {
     getAreas(1, 100)

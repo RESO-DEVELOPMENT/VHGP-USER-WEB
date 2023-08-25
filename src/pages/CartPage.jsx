@@ -1355,7 +1355,7 @@ const Cart = ({}) => {
                         <span>{"VN PAY"}</span>
                       </>
                     )}
-                    <i class="fa-solid fa-angle-right"></i>
+                    <i className="fa-solid fa-angle-right"></i>
                   </div>
                 </div>
                 <div

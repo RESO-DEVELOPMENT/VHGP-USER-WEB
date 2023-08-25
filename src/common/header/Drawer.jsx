@@ -69,7 +69,7 @@ export const DrawerContent = () => {
                 >
                   <i
                     style={{ fontSize: 13, marginLeft: 2 }}
-                    class="fa-solid fa-right-to-bracket"
+                    className="fa-solid fa-right-to-bracket"
                   ></i>
                 </div>
                 <h4>Đăng xuất</h4>
@@ -100,7 +100,7 @@ export const DrawerContent = () => {
                   }}
                 >
                   <i
-                    class="fa-solid fa-location-arrow"
+                    className="fa-solid fa-location-arrow"
                     style={{ fontSize: 16, marginRight: 2 }}
                   ></i>
                 </div>
@@ -133,7 +133,7 @@ export const DrawerContent = () => {
                 >
                   <i
                     style={{ fontSize: 13, marginLeft: 2 }}
-                    class="fa-solid fa-user"
+                    className="fa-solid fa-user"
                   ></i>
                 </div>
                 <h4>Đăng nhập</h4>
@@ -161,7 +161,7 @@ export const DrawerContent = () => {
                   }}
                 >
                   <i
-                    class="fa-solid fa-user-plus"
+                    className="fa-solid fa-user-plus"
                     style={{ fontSize: 13, marginLeft: 2 }}
                   ></i>
                 </div>
@@ -261,7 +261,7 @@ export const DrawerContent = () => {
                 >
                   <i
                     style={{ fontSize: 13, marginLeft: 2 }}
-                    class="fa-solid fa-right-to-bracket"
+                    className="fa-solid fa-right-to-bracket"
                   ></i>
                 </div>
                 <h4>Đăng xuất</h4>

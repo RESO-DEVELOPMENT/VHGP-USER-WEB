@@ -648,7 +648,7 @@ const OrderLookupPage = () => {
               {" "}
               {mobileMode ? (
                 <i
-                  class="fa-solid fa-magnifying-glass"
+                  className="fa-solid fa-magnifying-glass"
                   style={{ fontSize: 18 }}
                 ></i>
               ) : (

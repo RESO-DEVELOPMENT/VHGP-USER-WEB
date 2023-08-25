@@ -966,7 +966,10 @@ const Head = () => {
                           setIsConfirm(true);
                         }}
                       >
-                        <i class="fa-solid fa-x" id={value.accountBuildId}></i>
+                        <i
+                          className="fa-solid fa-x"
+                          id={value.accountBuildId}
+                        ></i>
                       </button>
                     </div>
 
