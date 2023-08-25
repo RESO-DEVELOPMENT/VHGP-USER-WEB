@@ -134,7 +134,6 @@ const Cart = ({}) => {
           getShipcostByMenu(menuIdCart),
         ])
           .then((res) => {
-            console.log(res);
             if (res.length > 0) {
               const duration = res[0].data;
               const apart = res[1].data;
@@ -383,12 +382,13 @@ const Cart = ({}) => {
         },
       ],
     };
-    console.log(order);
+
     postOrder(order)
       .then((res) => {
         if (res.data) {
           const { statusCode } = res.data;
           const { message } = res.data;
+          setorderIdSuccess(res.data.data.id);
           if (statusCode === "Fail") {
             setMessError(message);
             setOpentModalError(true);
@@ -1039,7 +1039,6 @@ const Cart = ({}) => {
                     setIsValidBuilding(false);
                     setIsValidFullname(false);
                     setIsValidPhone(false);
-                    console.log(userInfo);
                   }}
                   style={{
                     color: "#1890ff",

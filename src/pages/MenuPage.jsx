@@ -252,7 +252,7 @@ export const MenuPage = () => {
             setTitle(menu.name);
             setTimeEndState(getHourFromDouble(menu.endTime));
             setMenuCategory(menu.listCategoryInMenus || []);
-            console.log(menu.listCategoryStoreInMenus);
+
             setCategoriesInMenu(menu.listCategoryInMenus || []);
             setPageIndex(pageIndex + 1);
             if (menu?.listCategoryInMenus?.length > 0) {
@@ -316,7 +316,7 @@ export const MenuPage = () => {
             setMenuProduct(menu);
             setMenuIdProvider(menu.id);
             setMenuCategory(menu.listCategoryStoreInMenus);
-            console.log(menu.listCategoryStoreInMenus);
+
             setCategoriesInMenu(menu.listCategoryStoreInMenus || []);
             if (menu.listCategoryStoreInMenus?.length > 0) {
               setMenuEmpty(false);

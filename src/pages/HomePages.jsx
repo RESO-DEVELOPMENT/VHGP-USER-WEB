@@ -139,7 +139,6 @@ const HomePage = ({ productItems, shopItems }) => {
     getMenuByMode(mode).then((rs) => {
       const menu = rs.data;
       setMenuIdProvider(menu.id);
-      console.log(menu.id);
     });
   };
 

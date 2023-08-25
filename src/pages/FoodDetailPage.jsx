@@ -44,7 +44,6 @@ export const FoodDetailPage = () => {
     getMenuByMode(modeId).then((rs) => {
       const menu = rs.data;
       setMenuIdProvider(menu.id);
-      console.log("Menu", menu.id);
       if (menuIdProvider === "0" && menu.id === "0" && mode !== "3") {
         history.push(`/mode/${modeId}`);
       } else {

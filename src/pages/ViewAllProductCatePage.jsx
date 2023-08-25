@@ -17,7 +17,6 @@ export const ViewAllProductCatePage = () => {
   let history = useHistory();
 
   const getListStoreByCateId = (menuId, cateId) => {
-    console.log("get list store");
     getListStoreByCate(menuId, cateId, 1, 100)
       .then((res) => {
         if (res.data) {
@@ -120,7 +119,6 @@ export const ViewAllProductCatePage = () => {
       document.body.style.overflow = "auto";
       document.body.style.touchAction = "auto";
     } else {
-      console.log("offf");
       document.body.style.overflow = "hidden";
       document.body.style.touchAction = "none";
     }

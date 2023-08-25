@@ -250,7 +250,6 @@ const Head = () => {
     });
   };
   const handleAddress = (IDaccountBuilding) => {
-    console.log(IDaccountBuilding);
     const foundindex = listAddress.findIndex(
       (value) => value.accountBuildId == IDaccountBuilding
     );
@@ -283,15 +282,9 @@ const Head = () => {
     localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify(user));
 
     if (defaultData.accountBuildId !== defaulAddressID) {
-      setDefaultAddress(defaultData.accountBuildId)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      console.log("same");
+      setDefaultAddress(defaultData.accountBuildId).catch((error) => {
+        console.log(error);
+      });
     }
   };
 
@@ -881,8 +874,6 @@ const Head = () => {
         visible={openSelectAddress}
         onClose={() => {
           if (defaulAddressID >= 0) {
-            // console.log()
-
             handleAddress(defaulAddressID);
           }
           setOpenSelectAddress(false);
@@ -940,11 +931,6 @@ const Head = () => {
                         name="topic"
                         tabIndex={value.accountBuildId}
                         defaultChecked={value.isDefault === 1 ? true : false}
-                        // onClick={(e) => {
-                        //   cloneindexDefaulAddress = Number(e.target.id);
-                        //   console.log(cloneindexDefaulAddress);
-                        //   console.log(e);
-                        // }
                         onChange={(e) => {
                           cloneIdDefaultAddress = e.target.tabIndex;
                           console.log(cloneIdDefaultAddress);
