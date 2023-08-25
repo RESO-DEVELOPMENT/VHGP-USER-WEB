@@ -801,7 +801,7 @@ const Head = () => {
 
             <span style={{ fontSize: "14px", color: "red" }}>
               {isValidSignup === "0" ? "Vui lòng nhập đẩy đủ thông tin" : ""}
-              {isValidSignup === "1" ? "Xác nhận mật khẩu không đúng" : ""}
+              {isValidSignup === "1" ? "Mật khẩu xác nhận không khớp" : ""}
             </span>
           </div>
 
@@ -845,9 +845,15 @@ const Head = () => {
                 ) {
                   setIsValidSignup("0");
                 } else if (password === confirmPassword) {
-                  SignUp(userName, password, fullName, null);
+                  SignUp(userName, password, fullName, null).then((res) => {
+                    setIsOpenSignup(false);
+                    setContentIsConfirm(
+                      `Bạn đã đăng ký tài khoản ${res.data} thành công`
+                    );
+                    setIsConfirm(true);
+                  });
+
                   // (username, pass, name, imageUrl)
-                  setIsOpenSignup(false);
                 } else {
                   setIsValidSignup("1");
                 }
@@ -1135,11 +1141,13 @@ const Head = () => {
                       handleGetAccountBuilding();
                     })
                     .finally(setIsConfirm(false));
-                } else {
+                } else if (contentIsConfirm === "Bạn có muốn đăng xuất ?") {
                   localStorage.clear();
                   setIsLogin(false);
                   setUserInfo([]);
                   history.push("/");
+                  setIsConfirm(false);
+                } else {
                   setIsConfirm(false);
                 }
                 // set Defaut

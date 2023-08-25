@@ -75,7 +75,8 @@ export const DrawerContent = () => {
                 <h4>Đăng xuất</h4>
               </div>
             </Link>
-            <button
+            <Link
+              to={"/"}
               onClick={() => {
                 setOpenSelectAddress(true);
                 setIsOpenDrawer(false);
@@ -91,18 +92,21 @@ export const DrawerContent = () => {
                 <div
                   className="center_flex"
                   style={{
-                    background: "rgb(200,200,30)",
-                    color: "#333",
+                    background: "rgb(0, 132, 255)",
+                    color: "#fff",
                     width: 27,
                     height: 27,
                     borderRadius: 50,
                   }}
                 >
-                  <i class="fa-regular fa-address-book"></i>
+                  <i
+                    class="fa-solid fa-location-arrow"
+                    style={{ fontSize: 16, marginRight: 2 }}
+                  ></i>
                 </div>
                 <h4>Chọn địa chỉ</h4>
               </div>
-            </button>
+            </Link>
           </>
         ) : (
           <>
@@ -181,12 +185,9 @@ export const DrawerContent = () => {
                 borderRadius: 50,
               }}
             >
-              <i
-                style={{ fontSize: 13, marginLeft: 2 }}
-                className="fa-solid fa-list-ul"
-              ></i>
+              <i style={{ fontSize: 13 }} className="fa-solid fa-house"></i>
             </div>
-            <h4>Thực đơn</h4>
+            <h4>Trang chủ </h4>
           </div>
         </Link>
         <Link to={"/order"} onClick={() => setIsOpenDrawer(false)}>

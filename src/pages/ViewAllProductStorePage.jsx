@@ -94,10 +94,18 @@ export const ViewAllProductStorePage = () => {
         <div
           className="store-image-background"
           style={{
-            backgroundImage: `url(${img})`,
+            height: "500px",
+
+            backgroundImage:
+              img !== ""
+                ? `url(${img})`
+                : `url(https://cdn-icons-png.flaticon.com/512/123/123403.png)`,
           }}
         >
-          <div className="store-name">
+          <div
+            className="store-name"
+            style={{ display: img === "" ? "none" : null }}
+          >
             <h3 style={{ paddingBottom: 0 }}> {title}</h3>
             {storeDes !== null && storeDes !== "" ? (
               <span
@@ -161,7 +169,9 @@ export const ViewAllProductStorePage = () => {
                 alt=""
               />
               <span style={{ fontSize: mobileMode ? 16 : 20, fontWeight: 600 }}>
-                Không có sản phẩm nào!
+                {img === ""
+                  ? "Không tìm thấy cửa hàng"
+                  : "Không có sản phẩm nào!"}
               </span>
               <span
                 style={{
@@ -171,7 +181,9 @@ export const ViewAllProductStorePage = () => {
                   padding: "0 50px",
                 }}
               >
-                Hiện không có sản phẩm nào, Bạn vui lòng quay lại vào lúc khác.
+                {img === ""
+                  ? "Hiện không tìm thấy cửa hàng, Bạn vui lòng quay lại vào lúc khác."
+                  : "Hiện không có sản phẩm nào, Bạn vui lòng quay lại vào lúc khác."}
               </span>
             </div>
           </div>

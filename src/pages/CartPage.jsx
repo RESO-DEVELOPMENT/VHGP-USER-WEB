@@ -861,7 +861,7 @@ const Cart = ({}) => {
           </span>
           <span style={{ fontSize: mobileMode ? 14 : 17, fontWeight: 400 }}>
             {" "}
-            Building S102 Vinhomes Grand Park
+            Building {userInfo.building.label} Vinhomes Grand Park
           </span>
         </div>
         <div style={{ padding: "5px 0" }}>
@@ -869,9 +869,10 @@ const Cart = ({}) => {
             Thời gian giao hàng dự kiến:{" "}
           </span>
           <span style={{ fontSize: mobileMode ? 14 : 17, fontWeight: 400 }}>
-            {mode !== "3"
-              ? hanldeGetTime()
-              : hour.label + ", " + deliveryDateCart}
+            {
+              mode === "1" ? hanldeGetTime() : hour.label
+              // + ", " + deliveryDateCart
+            }
           </span>
         </div>
         <div style={{ padding: "5px 0", display: "flex", gap: 5 }}>

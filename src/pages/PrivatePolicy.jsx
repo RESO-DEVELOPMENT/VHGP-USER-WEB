@@ -7,7 +7,7 @@ export default function PrivatePolicy() {
   const { setIsHeaderOrder, mobileMode, setHeaderInfo, isSearchHeader } =
     useContext(AppContext);
   useEffect(() => {
-    setHeaderInfo({ isSearchHeader: false, title: "Private & Policy" });
+    setHeaderInfo({ isSearchHeader: false, title: "Điều Khoản Dịch Vụ" });
   }, []);
   return (
     <div
