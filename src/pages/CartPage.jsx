@@ -861,7 +861,7 @@ const Cart = ({}) => {
           </span>
           <span style={{ fontSize: mobileMode ? 14 : 17, fontWeight: 400 }}>
             {" "}
-            Building {userInfo.building.label} Vinhomes Grand Park
+            Building {userInfo.building?.label} Vinhomes Grand Park
           </span>
         </div>
         <div style={{ padding: "5px 0" }}>
