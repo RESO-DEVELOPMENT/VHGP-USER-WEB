@@ -318,7 +318,8 @@ const Head = () => {
     if ((length > 8) & (length < 12)) return true;
     else return false;
   }
-
+  console.log(defaulAddressID);
+  console.log(cloneIdDefaultAddress);
   return (
     <>
       <Rodal
@@ -928,12 +929,12 @@ const Head = () => {
                     >
                       <input
                         type="radio"
-                        name="topic"
+                        name="address"
                         tabIndex={value.accountBuildId}
                         defaultChecked={value.isDefault === 1 ? true : false}
-                        onChange={(e) => {
+                        onClick={(e) => {
+                          // e.preventDefault();
                           cloneIdDefaultAddress = e.target.tabIndex;
-                          console.log(cloneIdDefaultAddress);
                         }}
                       />
                       <div style={{ flexGrow: "1" }}>
@@ -959,10 +960,17 @@ const Head = () => {
                           cursor: "pointer",
                         }}
                         onClick={(e) => {
-                          setCloneIdDeleteAddress(e.target.id);
-                          setContentIsConfirm(
-                            "Bạn có muốn xóa địa chỉ này không ?"
-                          );
+                          e.preventDefault();
+                          if (e.target.id != defaulAddressID) {
+                            setCloneIdDeleteAddress(e.target.id);
+                            setContentIsConfirm(
+                              "Bạn có muốn xóa địa chỉ này không ?"
+                            );
+                          } else {
+                            setContentIsConfirm(
+                              "Bạn không thể xóa địa chỉ mặc định"
+                            );
+                          }
                           setIsConfirm(true);
                         }}
                       >
@@ -1027,11 +1035,13 @@ const Head = () => {
 
                 if (cloneIdDefaultAddress >= 0) {
                   handleAddress(cloneIdDefaultAddress);
-                } else {
+                } else if (defaulAddressID >= 0) {
                   handleAddress(defaulAddressID);
                 }
-
                 setOpenSelectAddress(false);
+              }}
+              onChange={(e) => {
+                e.preventDefault();
               }}
               style={{
                 flex: 1,
@@ -1126,7 +1136,9 @@ const Head = () => {
                 ) {
                   deleteAddressBuilding(Number(cloneIdDeleteAddress))
                     .then((res) => {
-                      console.log(res);
+                      if (cloneIdDeleteAddress == defaulAddressID) {
+                        setDefaulAddressID(undefined);
+                      }
                       handleGetAccountBuilding();
                     })
                     .finally(setIsConfirm(false));
@@ -1181,9 +1193,11 @@ const Head = () => {
               <input
                 type="text"
                 placeholder="Nhập địa chỉ giao hàng"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   isLogin
-                    ? handleGetAccountBuilding()
+                    ? // ? handleGetAccountBuilding()
+                      setOpenSelectAddress(true)
                     : setVisiblePopupInfo(true);
                   // test
                 }}
