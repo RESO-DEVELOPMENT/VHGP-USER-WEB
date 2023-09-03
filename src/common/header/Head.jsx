@@ -245,6 +245,18 @@ const Head = () => {
     ).then((resBuilding) => {
       if (resBuilding.status === 200) {
         setListAddress(resBuilding.data);
+        // setOpenSelectAddress(true);
+      }
+    });
+  };
+  const handleGetAccountBuildingLogin = () => {
+    getAccountBuilding(
+      1,
+      10,
+      JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_ID))
+    ).then((resBuilding) => {
+      if (resBuilding.status === 200) {
+        setListAddress(resBuilding.data);
         setOpenSelectAddress(true);
       }
     });
@@ -282,9 +294,13 @@ const Head = () => {
     localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify(user));
 
     if (defaultData.accountBuildId !== defaulAddressID) {
-      setDefaultAddress(defaultData.accountBuildId).catch((error) => {
-        console.log(error);
-      });
+      setDefaultAddress(defaultData.accountBuildId)
+        .then(() => {
+          handleGetAccountBuilding();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
@@ -302,7 +318,7 @@ const Head = () => {
       setIsOpenLogin(false);
 
       // get information
-      handleGetAccountBuilding();
+      handleGetAccountBuildingLogin();
     } else if (res.status === 200 && res.data.roleId !== "2") {
       setIsValidLogin("2");
       // ko dc phép vào cái trang này rồi....
