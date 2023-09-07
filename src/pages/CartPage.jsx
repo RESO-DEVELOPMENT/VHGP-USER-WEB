@@ -187,6 +187,58 @@ const Cart = ({}) => {
             setApartmentList([]);
             setisLoadingWhite(false);
           });
+      } else {
+        Promise.all([
+          getTimeDurationList(menuIdProvider, 1, 100),
+          getShipcostByMenu(menuIdCart),
+        ])
+          .then((res) => {
+            if (res.length > 0) {
+              const duration = res[0].data;
+
+              const menuShipcost = res[1].data;
+              setApartmentList([]);
+
+              if (menuShipcost) {
+                setShipCost(menuShipcost.shipCost);
+              }
+              if (duration) {
+                let optionsHours = [];
+                if (mode === "2") {
+                  duration.forEach((hour) => {
+                    if (parseInt(hour.fromHour) >= date.getHours() + 1) {
+                      optionsHours.push({
+                        value: hour.id,
+                        label: hour.fromHour + " - " + hour.toHour,
+                      });
+                    }
+                  });
+                } else if (mode === "3") {
+                  duration.forEach((hour) => {
+                    optionsHours.push({
+                      value: hour.id,
+                      label: hour.fromHour + " - " + hour.toHour,
+                    });
+                  });
+                }
+
+                setOptionTime(optionsHours);
+              }
+
+              setTimeout(() => {
+                document.getElementById("main").style.overflow = "hidden";
+                setisLoadingWhite(false);
+              }, 300);
+            } else {
+              setApartmentList([]);
+              setisLoadingWhite(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            setApartmentList([]);
+            setisLoadingWhite(false);
+          });
       }
     }
   }, [Cart1, Cart2, Cart3, apartment, area]);
@@ -945,14 +997,23 @@ const Cart = ({}) => {
         <div className="cart-main" style={{}}>
           <section className="cart-items" style={{}}>
             <div className="">
-              <div style={{ margin: "15px 15px 5px 15px" }}>
+              <div
+                style={{
+                  margin: "15px 15px 5px 15px",
+                  display: userInfo == "" ? "none" : null,
+                }}
+              >
                 <span style={{ color: "rgba(0,0,0,.4)", fontWeight: 700 }}>
                   Giao đến
                 </span>
               </div>
               <div className="checkout-content">
                 <div className="checkout-content-item">
-                  <h2>
+                  <h2
+                    style={{
+                      display: userInfo == "" ? "none" : null,
+                    }}
+                  >
                     {userInfo.building?.label || ""}
                     {", " + userInfo.area?.label} Vinhomes GP
                   </h2>
@@ -1026,7 +1087,13 @@ const Cart = ({}) => {
                   )}
                 </div>
               </div>
-              <div className="c_flex" style={{ margin: "15px 15px 5px 15px" }}>
+              <div
+                className="c_flex"
+                style={{
+                  margin: "15px 15px 5px 15px",
+                  display: userInfo == "" ? "none" : null,
+                }}
+              >
                 <span style={{ color: "rgba(0,0,0,.4)", fontWeight: 700 }}>
                   Thông tin người nhận
                 </span>
@@ -1051,6 +1118,9 @@ const Cart = ({}) => {
                 </span>
               </div>
               <div
+                style={{
+                  display: userInfo == "" ? "none" : null,
+                }}
                 className="checkout-content"
                 onClick={() => {
                   setVisiblePopupNote(true);
@@ -1397,10 +1467,14 @@ const Cart = ({}) => {
                 </div>
                 <button
                   onClick={() => {
-                    const Mode = JSON.parse(
-                      localStorage.getItem(LOCALSTORAGE_MODE)
-                    );
-                    setVisiblePopupComfirm(true);
+                    if (userInfo == "") {
+                      setVisiblePopupInfo(true);
+                    } else {
+                      const Mode = JSON.parse(
+                        localStorage.getItem(LOCALSTORAGE_MODE)
+                      );
+                      setVisiblePopupComfirm(true);
+                    }
                   }}
                   type="button"
                   disabled={isLoadingOrder || (mode !== "1" && !hour)}

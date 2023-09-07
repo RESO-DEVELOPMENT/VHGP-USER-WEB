@@ -493,7 +493,7 @@ const Head = () => {
                   setPhone(e.target.value);
                 }}
                 value={phone}
-                type="number"
+                // type="number"
                 style={{
                   border: !isValidPhone
                     ? "1px solid rgb(200,200,200)"

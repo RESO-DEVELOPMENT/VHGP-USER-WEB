@@ -93,15 +93,15 @@ const HomePage = ({ productItems, shopItems }) => {
     },
   };
   const hanldeViewAll = (cateId, categoryName) => {
-    if (userInfo.building && userInfo.fullName && userInfo.phone) {
-      setMode("2");
-      // history.push(`/mode/${mode}/${filtter}/${cateId}`, {
-      history.push(`/mode/2/${filtter}/${cateId}`, {
-        categoryName: categoryName,
-      });
-    } else {
-      setVisiblePopupInfo(true);
-    }
+    // if (userInfo.building && userInfo.fullName && userInfo.phone) {
+    setMode("2");
+    // history.push(`/mode/${mode}/${filtter}/${cateId}`, {
+    history.push(`/mode/2/${filtter}/${cateId}`, {
+      categoryName: categoryName,
+    });
+    // } else {
+    //   setVisiblePopupInfo(true);
+    // }
   };
 
   // cho cate
@@ -211,13 +211,13 @@ const HomePage = ({ productItems, shopItems }) => {
               className="home-menu-item"
               onClick={() => {
                 setMode("1");
-                if (userInfo.building && userInfo.fullName && userInfo.phone) {
-                  setVisiblePopupInfo(false);
-                  history.push(`/mode/${1}`, { home: true });
-                  setisLoadigFromHome(true);
-                } else {
-                  setVisiblePopupInfo(true);
-                }
+                // if (userInfo.building && userInfo.fullName && userInfo.phone) {
+                // setVisiblePopupInfo(false);
+                history.push(`/mode/${1}`, { home: true });
+                setisLoadigFromHome(true);
+                // } else {
+                //   setVisiblePopupInfo(true);
+                // }
               }}
             >
               <div className="home-menu-item-icon">

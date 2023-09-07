@@ -110,11 +110,11 @@ export const ShopCart = React.forwardRef(({ product }, ref) => {
             onClick={() => {
               // setIsHeader(false);
               // history.push(`/menu/${menu}/${product.id}`);
-              if (userInfo.building && userInfo.fullName && userInfo.phone) {
-                history.push(`/mode/${mode}/store/${pro.id}`);
-              } else {
-                setVisiblePopupInfo(true);
-              }
+              // if (userInfo.building && userInfo.fullName && userInfo.phone) {
+              history.push(`/mode/${mode}/store/${pro.id}`);
+              // } else {
+              //   setVisiblePopupInfo(true);
+              // }
             }}
           >
             {/* <span className="discount">{item.discount}% Off</span> */}
