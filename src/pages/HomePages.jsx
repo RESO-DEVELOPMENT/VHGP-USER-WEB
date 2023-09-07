@@ -231,14 +231,14 @@ const HomePage = ({ productItems, shopItems }) => {
               onClick={() => {
                 setMode("2");
 
-                if (userInfo.building && userInfo.fullName && userInfo.phone) {
-                  setVisiblePopupInfo(false);
+                // if (userInfo.building && userInfo.fullName && userInfo.phone) {
+                //   setVisiblePopupInfo(false);
 
-                  history.push(`/mode/${2}`, { home: true });
-                  setisLoadigFromHome(true);
-                } else {
-                  setVisiblePopupInfo(true);
-                }
+                history.push(`/mode/${2}`, { home: true });
+                setisLoadigFromHome(true);
+                // } else {
+                //   setVisiblePopupInfo(true);
+                // }
               }}
             >
               <div className="home-menu-item-icon">
@@ -251,13 +251,13 @@ const HomePage = ({ productItems, shopItems }) => {
               className="home-menu-item"
               onClick={() => {
                 setMode("3");
-                if (userInfo.building && userInfo.fullName && userInfo.phone) {
-                  setVisiblePopupInfo(false);
-                  history.push(`/mode/${3}`, { home: true });
-                  setisLoadigFromHome(true);
-                } else {
-                  setVisiblePopupInfo(true);
-                }
+                // if (userInfo.building && userInfo.fullName && userInfo.phone) {
+                //   setVisiblePopupInfo(false);
+                history.push(`/mode/${3}`, { home: true });
+                setisLoadigFromHome(true);
+                // } else {
+                //   setVisiblePopupInfo(true);
+                // }
               }}
             >
               <div className="home-menu-item-icon">
