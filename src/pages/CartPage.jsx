@@ -110,6 +110,7 @@ const Cart = ({}) => {
           return (total = item.pricePerPack * item.quantityCart + total);
         });
         if (Cart2 && Cart2?.length > 0) {
+          console.log(Cart2[0].menuId);
           setMenuIdProvider(Cart2[0].menuId);
           menuIdCart = Cart2[0].menuId;
         }
@@ -122,14 +123,16 @@ const Cart = ({}) => {
         if (Cart3 && Cart3?.length > 0) {
           setMenuIdProvider(Cart3[0].menuId);
           menuIdCart = Cart3[0].menuId;
+          // meunuIdCart vs menuIdprovider khác chỗ n
         }
         setTotalPrice(total);
         setCartList(Cart3);
       }
       // let menuId = "13c699e4-7e19-4ecb-ac99-1df0661f0e61";
+
       if (area) {
         Promise.all([
-          getTimeDurationList(menuIdProvider, 1, 100),
+          getTimeDurationList(menuIdCart, 1, 100),
           getApartment(area.value),
           getShipcostByMenu(menuIdCart),
         ])
@@ -152,7 +155,9 @@ const Cart = ({}) => {
               }
               if (duration) {
                 let optionsHours = [];
+                console.log(mode);
                 if (mode === "2") {
+                  console.log("hoan" + duration);
                   duration.forEach((hour) => {
                     if (parseInt(hour.fromHour) >= date.getHours() + 1) {
                       optionsHours.push({
@@ -189,11 +194,14 @@ const Cart = ({}) => {
           });
       } else {
         Promise.all([
-          getTimeDurationList(menuIdProvider, 1, 100),
+          getTimeDurationList(menuIdCart, 1, 100),
           getShipcostByMenu(menuIdCart),
         ])
           .then((res) => {
+            console.log("then");
+
             if (res.length > 0) {
+              console.log(res);
               const duration = res[0].data;
 
               const menuShipcost = res[1].data;
@@ -1038,7 +1046,7 @@ const Cart = ({}) => {
                   </div>
                 ) : (
                   <div className="checkout-content-item">
-                    <span>Hình thúc giao hàng</span>
+                    <span>Hình thức giao hàng</span>
                     <span
                       style={{
                         fontSize: 15,
