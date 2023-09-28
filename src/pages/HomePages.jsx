@@ -146,8 +146,10 @@ const HomePage = ({ productItems, shopItems }) => {
   //// cho mon ngon gan ban
   useEffect(() => {
     // son
+    if (area !== '') {
+      getMenu('2', filtter, 1, 7)
+    }
 
-    getMenu('2', filtter, 1, 7)
     setMode('1')
     //s on
     setisLoadigFromHome(false)
