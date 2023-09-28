@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   getAccountBuilding,
   getAreas,
   getOrdersbyPhone,
-} from '../apis/apiService'
+} from "../apis/apiService";
 import {
   LOCALSTORAGE_CART_NAME1,
   LOCALSTORAGE_CART_NAME2,
@@ -15,95 +15,95 @@ import {
   LOCALSTORAGE_USER_ID,
   LOCALSTORAGE_USER_LOGIN,
   LOCALSTORAGE_USER_NAME,
-} from '../constants/Variable'
+} from "../constants/Variable";
 
-export const AppContext = React.createContext()
+export const AppContext = React.createContext();
 
 export default function AppProvider({ children }) {
-  const [listProducts, setlistProducts] = useState([])
-  const [mode, setMode] = useState('1')
-  const [menuIdProvider, setMenuIdProvider] = useState('0')
-  const [modeType, setModeType] = useState('')
-  const [deliveryDate, setDeliveryDate] = useState('')
-  const [menuOrder, setMenuOrder] = useState(1)
+  const [listProducts, setlistProducts] = useState([]);
+  const [mode, setMode] = useState("1");
+  const [menuIdProvider, setMenuIdProvider] = useState("0");
+  const [modeType, setModeType] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
+  const [menuOrder, setMenuOrder] = useState(1);
   const [mobileMode, setMobileMode] = useState(
     window.innerWidth < 700 ? true : false
-  )
-  const [Cart1, setCart1] = useState([])
-  const [Cart2, setCart2] = useState([])
-  const [Cart3, setCart3] = useState([])
-  const [userInfo, setUserInfo] = useState({})
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
-  const [isLoadigFromHome, setisLoadigFromHome] = useState(true)
-  const [isOpenLogin, setIsOpenLogin] = useState(false)
-  const [isOpenSignup, setIsOpenSignup] = useState(false)
-  const [openDeleteCart, setOpenDeleteCart] = useState(false)
-  const [isCartFooter, setIsCartFooter] = useState(false)
-  const [isHeaderHome, setIsHeaderHome] = useState(false)
-  const [isHeader, setIsHeader] = useState(true)
-  const [opentModalSuccess, setOpentModalSuccess] = useState(false)
-  const [orderIdSuccess, setorderIdSuccess] = useState('')
-  const [opentModalError, setOpentModalError] = useState(false)
-  const [messError, setMessError] = useState(null)
-  const [isHeaderOrder, setIsHeaderOrder] = useState(false)
-  const [visiblePopupInfo, setVisiblePopupInfo] = useState(false)
-  const [isLoadingMain, setisLoadingMain] = useState(true)
-  const [isCartMain1, setisCartMain1] = useState(true)
-  const [isCartMain2, setisCartMain2] = useState(true)
-  const [isCartMain3, setisCartMain3] = useState(true)
-  const [headerInfo, setHeaderInfo] = useState({})
-  const [keySearch, setKeySearch] = useState('')
-  const [isSearchSubmit, setIsSearchSubmit] = useState(false)
-  const [categoriesInMenu, setCategoriesInMenu] = useState([])
-  const [apartmentProvider, setApartmentProvider] = useState([])
-  const [areaProvider, setAreaProvider] = useState([])
-  const [buildings, setBuildings] = useState([])
-  const [orderDrawer, setOrdersDrawer] = useState([])
-  const [isLogin, setIsLogin] = useState(false)
-  const [isConfirm, setIsConfirm] = useState(false)
-  const [contentIsConfirm, setContentIsConfirm] = useState('')
-  const [listAddress, setListAddress] = useState([])
-  const [openSelectAddress, setOpenSelectAddress] = useState(false)
-
-  const [area, setArea] = useState('')
+  );
+  const [Cart1, setCart1] = useState([]);
+  const [Cart2, setCart2] = useState([]);
+  const [Cart3, setCart3] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isLoadigFromHome, setisLoadigFromHome] = useState(true);
+  const [isOpenLogin, setIsOpenLogin] = useState(false);
+  const [isOpenSignup, setIsOpenSignup] = useState(false);
+  const [openDeleteCart, setOpenDeleteCart] = useState(false);
+  const [isCartFooter, setIsCartFooter] = useState(false);
+  const [isHeaderHome, setIsHeaderHome] = useState(false);
+  const [isHeader, setIsHeader] = useState(true);
+  const [opentModalSuccess, setOpentModalSuccess] = useState(false);
+  const [orderIdSuccess, setorderIdSuccess] = useState("");
+  const [opentModalError, setOpentModalError] = useState(false);
+  const [messError, setMessError] = useState(null);
+  const [isHeaderOrder, setIsHeaderOrder] = useState(false);
+  const [visiblePopupInfo, setVisiblePopupInfo] = useState(false);
+  const [isLoadingMain, setisLoadingMain] = useState(true);
+  const [isCartMain1, setisCartMain1] = useState(true);
+  const [isCartMain2, setisCartMain2] = useState(true);
+  const [isCartMain3, setisCartMain3] = useState(true);
+  const [headerInfo, setHeaderInfo] = useState({});
+  const [keySearch, setKeySearch] = useState("");
+  const [isSearchSubmit, setIsSearchSubmit] = useState(false);
+  const [categoriesInMenu, setCategoriesInMenu] = useState([]);
+  const [apartmentProvider, setApartmentProvider] = useState([]);
+  const [areaProvider, setAreaProvider] = useState([]);
+  const [buildings, setBuildings] = useState([]);
+  const [orderDrawer, setOrdersDrawer] = useState([]);
+  const [isLogin, setIsLogin] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [contentIsConfirm, setContentIsConfirm] = useState("");
+  const [listAddress, setListAddress] = useState([]);
+  const [openSelectAddress, setOpenSelectAddress] = useState(false);
+  const [isOpenFeedback, setIsOpenFeedback] = useState(false);
+  const [area, setArea] = useState("");
 
   // const [auth, setAuth] = useState({});
-  let location = useLocation()
-  let history = useHistory()
+  let location = useLocation();
+  let history = useHistory();
   // const { productItems } = Data;
 
   useEffect(() => {
     getOrdersbyPhone(1, 100, userInfo.phone)
       .then((res) => {
         if (res.data) {
-          setOrdersDrawer(res.data)
+          setOrdersDrawer(res.data);
         }
       })
       .catch((error) => {
-        console.log(error)
-        setAreaProvider([])
-        setisLoadingMain(false)
-      })
-  }, [userInfo.phone, orderIdSuccess])
+        console.log(error);
+        setAreaProvider([]);
+        setisLoadingMain(false);
+      });
+  }, [userInfo.phone, orderIdSuccess]);
 
   useEffect(() => {
     getAreas(1, 100)
       .then((res) => {
         if (res.data) {
-          const area = res.data
-          setAreaProvider(area)
-          setisLoadingMain(false)
+          const area = res.data;
+          setAreaProvider(area);
+          setisLoadingMain(false);
         } else {
-          setAreaProvider([])
-          setisLoadingMain(false)
+          setAreaProvider([]);
+          setisLoadingMain(false);
         }
       })
       .catch((error) => {
-        console.log(error)
-        setAreaProvider([])
-        setisLoadingMain(false)
-      })
-  }, [location.pathname])
+        console.log(error);
+        setAreaProvider([]);
+        setisLoadingMain(false);
+      });
+  }, [location.pathname]);
 
   useEffect(() => {
     // if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_ORDER))) {
@@ -116,67 +116,67 @@ export default function AppProvider({ children }) {
       // setAuth({ userId: "", isLogin: false, userPhone: "" });
       // localStorage.setItem(LOCALSTORAGE_MODE, JSON.stringify({ userId: "", isLogin: false, userPhone: "" }));
     } else {
-      const Mode = JSON.parse(localStorage.getItem(LOCALSTORAGE_MODE))
-      setMode(Mode)
+      const Mode = JSON.parse(localStorage.getItem(LOCALSTORAGE_MODE));
+      setMode(Mode);
       switch (Mode) {
-        case '1':
-          setModeType('Giao nhanh 30 phút')
-          break
-        case '2':
-          setModeType('Giao hàng trong ngày')
-          break
-        case '3':
-          setModeType('Đặt hàng 3 - 5 ngày')
-          break
+        case "1":
+          setModeType("Giao nhanh 30 phút");
+          break;
+        case "2":
+          setModeType("Giao hàng trong ngày");
+          break;
+        case "3":
+          setModeType("Đặt hàng 3 - 5 ngày");
+          break;
 
         default:
-          setModeType('')
-          break
+          setModeType("");
+          break;
       }
     }
 
-    let modeId = location.pathname.trim().split('/')[2]
+    let modeId = location.pathname.trim().split("/")[2];
     if (
-      location.pathname.trim().split('/') &&
-      location.pathname.trim().split('/')[1] === 'mode'
+      location.pathname.trim().split("/") &&
+      location.pathname.trim().split("/")[1] === "mode"
     ) {
-      setMode(modeId)
+      setMode(modeId);
       switch (modeId) {
-        case '1':
-          setModeType('Giao nhanh 30 phút')
-          break
-        case '2':
-          setModeType('Giao hàng trong ngày')
-          break
-        case '3':
-          setModeType('Đặt hàng 3 - 5 ngày')
-          break
+        case "1":
+          setModeType("Giao nhanh 30 phút");
+          break;
+        case "2":
+          setModeType("Giao hàng trong ngày");
+          break;
+        case "3":
+          setModeType("Đặt hàng 3 - 5 ngày");
+          break;
 
         default:
-          setModeType('')
-          break
+          setModeType("");
+          break;
       }
     }
-  }, [location.pathname])
+  }, [location.pathname]);
 
   useEffect(() => {
     // if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_MODE))) {
     //     localStorage.setItem(LOCALSTORAGE_MODE, JSON.stringify(""));
     // }
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))) {
-      localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]))
-      setUserInfo({})
+      localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify([]));
+      setUserInfo({});
       // history.push("/");
       // Khi vào ko có thì set vậy lun, luôn có key....
       // push đó là khi mà ko có thì nó ra trang chủ thoy
     } else {
       // có user thì mới có thẻ là đã đăng nhập ko thì auto chưa
-      const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))
+      const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME));
       if (Object.keys(user).length === 0) {
         // history.push("/");
       } else {
         if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
-          setIsLogin(false)
+          setIsLogin(false);
         } else {
           getAccountBuilding(
             1,
@@ -184,13 +184,13 @@ export default function AppProvider({ children }) {
             JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_ID))
           ).then((resBuilding) => {
             if (resBuilding.status === 200) {
-              setListAddress(resBuilding.data)
+              setListAddress(resBuilding.data);
             }
-          })
-          setIsLogin(true)
+          });
+          setIsLogin(true);
         }
       }
-      setUserInfo(user)
+      setUserInfo(user);
 
       // có user ngon :V
     }
@@ -201,13 +201,13 @@ export default function AppProvider({ children }) {
       localStorage.setItem(
         LOCALSTORAGE_HiSTORY_SEARCH,
         JSON.stringify({ mode_1: [], mode_2: [], mode_3: [] })
-      )
+      );
     } else {
       // const search = JSON.parse(localStorage.getItem(LOCALSTORAGE_HiSTORY_SEARCH));
       // setUserInfo(user);
     }
-    return () => {}
-  }, [history])
+    return () => {};
+  }, [history]);
 
   // useEffect(() => {
   //     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_LOGIN))) {
@@ -221,83 +221,83 @@ export default function AppProvider({ children }) {
   // }, [history]);
 
   useEffect(() => {
-    const checkout = location.pathname.trim().split('/')[1]
+    const checkout = location.pathname.trim().split("/")[1];
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME1))) {
-      localStorage.setItem(LOCALSTORAGE_CART_NAME1, JSON.stringify([]))
-      setCart1([])
-      setisCartMain1(false)
+      localStorage.setItem(LOCALSTORAGE_CART_NAME1, JSON.stringify([]));
+      setCart1([]);
+      setisCartMain1(false);
     }
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME2))) {
-      localStorage.setItem(LOCALSTORAGE_CART_NAME2, JSON.stringify([]))
-      setCart2([])
-      setisCartMain2(false)
+      localStorage.setItem(LOCALSTORAGE_CART_NAME2, JSON.stringify([]));
+      setCart2([]);
+      setisCartMain2(false);
     }
     if (!JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME3))) {
-      localStorage.setItem(LOCALSTORAGE_CART_NAME3, JSON.stringify([]))
-      setCart3([])
-      setisCartMain3(false)
+      localStorage.setItem(LOCALSTORAGE_CART_NAME3, JSON.stringify([]));
+      setCart3([]);
+      setisCartMain3(false);
     }
 
-    const CartList1 = JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME1))
-    const CartList2 = JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME2))
-    const CartList3 = JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME3))
-    if (checkout !== '' && checkout !== 'order') {
-      if (mode === '1') {
+    const CartList1 = JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME1));
+    const CartList2 = JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME2));
+    const CartList3 = JSON.parse(localStorage.getItem(LOCALSTORAGE_CART_NAME3));
+    if (checkout !== "" && checkout !== "order") {
+      if (mode === "1") {
         if (CartList1.length === 0) {
-          setisCartMain1(false)
+          setisCartMain1(false);
         } else if (CartList1.length > 0) {
-          setisCartMain1(true)
+          setisCartMain1(true);
           if (CartList1[0] && CartList1[0].menuName) {
-            setDeliveryDate(CartList1[0].menuName)
+            setDeliveryDate(CartList1[0].menuName);
           }
-          setCart1(CartList1)
+          setCart1(CartList1);
         }
-      } else if (mode === '2') {
+      } else if (mode === "2") {
         if (CartList2.length === 0) {
-          setisCartMain2(false)
+          setisCartMain2(false);
         } else if (CartList2.length > 0) {
-          setisCartMain2(true)
+          setisCartMain2(true);
           if (CartList2[0] && CartList2[0].menuName) {
-            setDeliveryDate(CartList2[0].menuName)
+            setDeliveryDate(CartList2[0].menuName);
           }
-          setCart2(CartList2)
+          setCart2(CartList2);
         }
-      } else if (mode === '3') {
+      } else if (mode === "3") {
         if (CartList3.length === 0) {
-          setisCartMain3(false)
+          setisCartMain3(false);
         } else if (CartList3.length > 0) {
-          setisCartMain3(true)
+          setisCartMain3(true);
           // if (CartList3[0] && CartList3[0].menuName) {
           //     setDeliveryDate(CartList3[0].menuName);
           // }
-          setCart3(CartList3)
+          setCart3(CartList3);
         }
       }
     } else {
-      setisCartMain1(false)
-      setisCartMain2(false)
-      setisCartMain3(false)
+      setisCartMain1(false);
+      setisCartMain2(false);
+      setisCartMain3(false);
     }
-    if (checkout === 'checkout') {
-      if (mode === '1') {
+    if (checkout === "checkout") {
+      if (mode === "1") {
         if (CartList1.length === 0) {
-          history.push('/')
+          history.push("/");
         }
-      } else if (mode === '2') {
+      } else if (mode === "2") {
         if (CartList2.length === 0) {
-          history.push('/')
+          history.push("/");
         }
-      } else if (mode === '3') {
+      } else if (mode === "3") {
         if (CartList3.length === 0) {
-          history.push('/')
+          history.push("/");
         }
       }
 
-      setCart1([...CartList1])
-      setCart2([...CartList2])
-      setCart3([...CartList3])
+      setCart1([...CartList1]);
+      setCart2([...CartList2]);
+      setCart3([...CartList3]);
     }
-  }, [history, location, mode])
+  }, [history, location, mode]);
 
   return (
     <AppContext.Provider
@@ -376,6 +376,8 @@ export default function AppProvider({ children }) {
         setisLoadigFromHome,
         isLogin,
         setIsLogin,
+        isOpenFeedback,
+        setIsOpenFeedback,
         isOpenSignup,
         setIsOpenSignup,
         isOpenLogin,
@@ -394,5 +396,5 @@ export default function AppProvider({ children }) {
     >
       {children}
     </AppContext.Provider>
-  )
+  );
 }

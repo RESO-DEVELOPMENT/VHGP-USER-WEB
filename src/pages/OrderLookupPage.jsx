@@ -2,8 +2,8 @@ import moment from "moment/moment";
 import "moment/locale/vi";
 import React, { useContext, useEffect, useState } from "react";
 import BallTriangle from "react-loading-icons/dist/esm/components/ball-triangle";
-import { useHistory, useLocation } from "react-router-dom";
-import { getOrderDetail } from "../apis/apiService";
+import { useHistory, useLocation, Link } from "react-router-dom";
+import { getOrderDetail,postFeedback } from "../apis/apiService";
 import { AppContext } from "../context/AppProvider";
 import Lottie from "react-lottie";
 import animation from "../../src/assets/loading-circle.json";
@@ -17,6 +17,8 @@ const OrderLookupPage = () => {
     setisCartMain2,
     setisCartMain3,
     orderDrawer,
+    isOpenFeedback,
+    setIsOpenFeedback,
   } = useContext(AppContext);
   const [isLoadingCircle, setIsLoadingCircle] = useState(false);
   const [orderInfo, setOrderInfo] = useState(null);
@@ -68,6 +70,31 @@ const OrderLookupPage = () => {
     },
   ];
   const [statusOrderUser, setStatusOrderUser] = useState(statusMain);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+  };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+  const feedback = {
+    description: comment,
+    rating: rating
+  }
+
+
+  const submitFeedback = () => {
+    postFeedback(orderId,feedback)
+          .then((res) => {
+            setIsOpenFeedback(false)
+          })
+          .catch((res) => {
+            console.log(res);
+          });
+  };
 
   let location = useLocation();
   useEffect(() => {
@@ -601,6 +628,114 @@ const OrderLookupPage = () => {
           </button>
         </div>
       </Rodal>
+
+      <Rodal
+        height={370}
+        width={mobileMode ? 350 : 400}
+        visible={isOpenFeedback}
+        showCloseButton={false}
+        onClose={() => {
+          setIsOpenFeedback(false);
+        }}
+        style={{ borderRadius: 10 }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                borderBottom: "1px solid rgb(220,220,220)",
+                paddingBottom: "10px",
+              }}
+            >
+              <h2>Đánh giá sản phẩm</h2>
+            </div>
+          </div>
+
+          <div>
+            <p>Chọn đánh giá sao:</p>
+            <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  onClick={() => handleRatingChange(star)}
+                  style={{
+                    fontSize: "30px",
+                    cursor: "pointer",
+                    color: star <= rating ? "orange" : "gray",
+                  }}
+                >
+                  ☆
+                </span>
+              ))}
+            </div>
+            <div>
+              <p>Nhận xét của bạn:</p>
+              <textarea
+                rows="4"
+                cols="50"
+                value={comment}
+                onChange={handleCommentChange}
+                placeholder="Viết nhận xét của bạn tại đây..."
+                style={{ outline: "none" }}
+              />
+            </div>
+          </div>
+
+          <div
+            className="f_flex rodal-delet-cart"
+            style={{
+              width: " 100%",
+              justifyContent: "space-between",
+              paddingTop: 5,
+              gap: 15,
+            }}
+          >
+            <button
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                height: 45,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpenFeedback(false);
+              }}
+            >
+              Đóng
+            </button>
+            <button
+              onClick={(e) => {
+                submitFeedback();
+              }}
+              style={{
+                flex: 1,
+                padding: 14,
+                fontSize: "1rem",
+                cursor: "pointer",
+                fontWeight: 700,
+                borderRadius: 10,
+                background: "var(--primary)",
+                color: "#fff",
+                height: 45,
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Rodal>
+
       <div className="center_flex">
         <div className="order-lookup-wrapper">
           <div
@@ -1108,19 +1243,41 @@ const OrderLookupPage = () => {
                               alt=""
                               style={{ width: 38, height: 38 }}
                             />
-                            <div
-                              className="f_flex"
-                              style={{
-                                flexDirection: "column",
-                                paddingLeft: 4,
-                              }}
-                            >
-                              <span className="status-info-time">
-                                {statusOrderUser[5].time}
-                              </span>
-                              <span className="status-info-name">
-                                {statusOrderUser[5].statusName}
-                              </span>
+                            <div>
+                              <div
+                                className="f_flex"
+                                style={{
+                                  flexDirection: "column",
+                                  paddingLeft: 4,
+                                }}
+                              >
+                                <span className="status-info-time">
+                                  {statusOrderUser[5].time}
+                                </span>
+                                <span className="status-info-name">
+                                  {statusOrderUser[5].statusName}
+                                </span>
+                              </div>
+
+                              <Link
+                                onClick={() => {
+                                  if(statusOrderUser[5].active){
+                                    setIsOpenFeedback(true);
+                                  }
+                                }}
+                              >
+                                <button
+                                  className="feedback"
+                                  style={{
+                                    padding: "7px 15px",
+                                    cursor: "pointer",
+                                    background: "#3333",
+                                    borderRadius: "5px",                                 
+                                  }}
+                                >
+                                  Đánh giá
+                                </button>
+                              </Link>
                             </div>
                           </div>
                         </div>
