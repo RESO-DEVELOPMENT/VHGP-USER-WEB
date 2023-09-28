@@ -1261,7 +1261,9 @@ const OrderLookupPage = () => {
 
                               <Link
                                 onClick={() => {
-                                  setIsOpenFeedback(true);
+                                  if(statusOrderUser[5].active){
+                                    setIsOpenFeedback(true);
+                                  }
                                 }}
                               >
                                 <button
@@ -1270,10 +1272,7 @@ const OrderLookupPage = () => {
                                     padding: "7px 15px",
                                     cursor: "pointer",
                                     background: "#3333",
-                                    borderRadius: "5px",
-                                    display: statusOrderUser[5].active
-                                      ? "block"
-                                      : "block",
+                                    borderRadius: "5px",                                 
                                   }}
                                 >
                                   Đánh giá
