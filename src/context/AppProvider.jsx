@@ -37,6 +37,7 @@ export default function AppProvider({ children }) {
   const [isLoadigFromHome, setisLoadigFromHome] = useState(true);
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   const [isOpenSignup, setIsOpenSignup] = useState(false);
+  const [isOpenFeedback, setIsOpenFeedback] = useState(false);
   const [openDeleteCart, setOpenDeleteCart] = useState(false);
   const [isCartFooter, setIsCartFooter] = useState(false);
   const [isHeaderHome, setIsHeaderHome] = useState(false);
@@ -371,6 +372,8 @@ export default function AppProvider({ children }) {
         setisLoadigFromHome,
         isLogin,
         setIsLogin,
+        isOpenFeedback,
+        setIsOpenFeedback,
         isOpenSignup,
         setIsOpenSignup,
         isOpenLogin,

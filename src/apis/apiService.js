@@ -284,3 +284,10 @@ export const deleteAddressBuilding = (ID) => {
     "Content-Type": "application/json",
   });
 };
+// https://api.vhgp.net/api/v1/feedback?orderId=?
+export const postFeedback = (oderID,feedback) => {
+  return axios.post(`${BASE_URL}feedback?orderId=${oderID}`, feedback, {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  });
+};
