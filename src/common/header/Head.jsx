@@ -60,9 +60,9 @@ const Head = () => {
   //const [area, setArea] = useState('')
   const [apartment, setApartment] = useState('')
   const [apartmentList, setApartmentList] = useState([])
-  const [buldingList, setBuldingList] = useState([])
+  const [buildingList, setBuildingList] = useState([])
   // const [user, setUser] = useState({});
-  const [isValidFullName, setIsValidFullname] = useState(false)
+  const [isValidFullName, setIsValidFullName] = useState(false)
   const [isValidPhone, setIsValidPhone] = useState(false)
   const [isValidPhoneRegex, setIsValidPhoneRegex] = useState(true)
   const [isValidBuilding, setIsValidBuilding] = useState(false)
@@ -74,8 +74,8 @@ const Head = () => {
   // 0 is oke, 1 is... , 2 is...
 
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [isValidSignup, setIsValidSignup] = useState('0')
-  const [defaulAddressID, setDefaulAddressID] = useState(-1)
+  const [isValidSignUp, setIsValidSignUp] = useState('0')
+  const [defaultAddressID, setDefaultAddressID] = useState(-1)
   const [cloneIdDeleteAddress, setCloneIdDeleteAddress] = useState(-1)
   // const [indexDefaultAddress, setIndexDefaultAddress] = useState(-1);
   let cloneIdDefaultAddress
@@ -96,7 +96,7 @@ const Head = () => {
       if (foundDefaultIDaddress !== -1) {
         cloneIdDefaultAddress =
           listAddress[foundDefaultIDaddress].accountBuildId
-        setDefaulAddressID(cloneIdDefaultAddress)
+        setDefaultAddressID(cloneIdDefaultAddress)
       }
     }
   }, [listAddress])
@@ -108,7 +108,7 @@ const Head = () => {
     setBuilding(userInfo.building || '')
     setApartment(userInfo.apartment || '')
     setArea(userInfo.area || '')
-    setMode(0)
+    //setMode(0)
     if (!userInfo.area) {
       setVisiblePopupInfo(true)
     }
@@ -126,7 +126,7 @@ const Head = () => {
               for (let index = 0; index < apart.listCluster.length; index++) {
                 const element = apart.listCluster[index]
                 if (element.id === apartment.value) {
-                  setBuldingList(element.listBuilding)
+                  setBuildingList(element.listBuilding)
                 }
               }
             }
@@ -141,7 +141,7 @@ const Head = () => {
     }
   }, [apartment, area])
 
-  const optionsBuilding = buldingList.map((building) => {
+  const optionsBuilding = buildingList.map((building) => {
     return { value: building.id, label: building.name }
   })
   const optionsApartment = apartmentList.map((building) => {
@@ -174,9 +174,9 @@ const Head = () => {
       isValid = false
     }
     if (!fullName && fullName.length === 0) {
-      setIsValidFullname(true)
+      setIsValidFullName(true)
     } else {
-      setIsValidFullname(false)
+      setIsValidFullName(false)
     }
     if (!phone && phone.length === 0) {
       setIsValidPhone(true)
@@ -305,7 +305,7 @@ const Head = () => {
     setUserInfo(user)
     localStorage.setItem(LOCALSTORAGE_USER_NAME, JSON.stringify(user))
 
-    if (defaultData.accountBuildId !== defaulAddressID) {
+    if (defaultData.accountBuildId !== defaultAddressID) {
       setDefaultAddress(defaultData.accountBuildId)
         .then(() => {
           handleGetAccountBuilding()
@@ -349,6 +349,7 @@ const Head = () => {
 
   return (
     <>
+      {/* NEW ADDRESS MODAL */}
       <Rodal
         height={
           isValidFullName ||
@@ -406,14 +407,12 @@ const Head = () => {
                 placeholder="Khu vực"
                 onChange={(e) => {
                   // khi set lại Area thì 2 cái sau phải reset lại,.....
-                  console.log(e.value)
                   setArea(e)
-                  console.log(area)
 
                   if (e.label !== area.label) {
                     setApartment('')
                     setBuilding('')
-                    setBuldingList([])
+                    setBuildingList([])
                   }
                 }}
                 value={area}
@@ -439,7 +438,7 @@ const Head = () => {
                   // for (let index = 0; index < apartmentList.length; index++) {
                   //   const element = apartmentList[index];
                   //   if (element.id === e.value) {
-                  //     setBuldingList(element.listBuilding);
+                  //     setBuildingList(element.listBuilding);
                   //   }
                   // }
                   const foundIndexApartmentList = apartmentList.findIndex(
@@ -447,7 +446,7 @@ const Head = () => {
                       return element.id === e.value
                     }
                   )
-                  setBuldingList(
+                  setBuildingList(
                     apartmentList[foundIndexApartmentList].listBuilding
                   )
                 }}
@@ -599,6 +598,7 @@ const Head = () => {
           </div>
         </div>
       </Rodal>
+      {/* LOGIN MODAL */}
       <Rodal
         height={300}
         width={mobileMode ? 350 : 400}
@@ -722,6 +722,7 @@ const Head = () => {
           </div>
         </div>
       </Rodal>
+      {/* REGISTER MODAL */}
       <Rodal
         height={465}
         width={mobileMode ? 350 : 400}
@@ -829,8 +830,8 @@ const Head = () => {
             />
 
             <span style={{ fontSize: '14px', color: 'red' }}>
-              {isValidSignup === '0' ? 'Vui lòng nhập đẩy đủ thông tin' : ''}
-              {isValidSignup === '1' ? 'Mật khẩu xác nhận không khớp' : ''}
+              {isValidSignUp === '0' ? 'Vui lòng nhập đẩy đủ thông tin' : ''}
+              {isValidSignUp === '1' ? 'Mật khẩu xác nhận không khớp' : ''}
             </span>
           </div>
 
@@ -872,7 +873,7 @@ const Head = () => {
                   confirmPassword == '' ||
                   password == ''
                 ) {
-                  setIsValidSignup('0')
+                  setIsValidSignUp('0')
                 } else if (password === confirmPassword) {
                   SignUp(userName, password, fullName, null).then((res) => {
                     setIsOpenSignup(false)
@@ -884,7 +885,7 @@ const Head = () => {
 
                   // (username, pass, name, imageUrl)
                 } else {
-                  setIsValidSignup('1')
+                  setIsValidSignUp('1')
                 }
               }}
               style={{
@@ -904,13 +905,14 @@ const Head = () => {
           </div>
         </div>
       </Rodal>
+      {/* CHOOSE ADDRESS MODAL */}
       <Rodal
         height={500}
         width={mobileMode ? 350 : 400}
         visible={openSelectAddress}
         onClose={() => {
-          if (defaulAddressID >= 0) {
-            handleAddress(defaulAddressID)
+          if (defaultAddressID >= 0) {
+            handleAddress(defaultAddressID)
           }
           setOpenSelectAddress(false)
         }}
@@ -984,7 +986,7 @@ const Head = () => {
                           <span>| {value.soDienThoai}</span>
                         </p>
                         <p>
-                          {value.buildingName}, {value.areaName} Vinhomes GP
+                          {value.buildingName}, {value.areaName}
                         </p>
                       </div>
                       <button
@@ -996,7 +998,7 @@ const Head = () => {
                         }}
                         onClick={(e) => {
                           e.preventDefault()
-                          if (e.target.id != defaulAddressID) {
+                          if (e.target.id != defaultAddressID) {
                             setCloneIdDeleteAddress(e.target.id)
                             setContentIsConfirm(
                               'Bạn có muốn xóa địa chỉ này không ?'
@@ -1070,8 +1072,8 @@ const Head = () => {
 
                 if (cloneIdDefaultAddress >= 0) {
                   handleAddress(cloneIdDefaultAddress)
-                } else if (defaulAddressID >= 0) {
-                  handleAddress(defaulAddressID)
+                } else if (defaultAddressID >= 0) {
+                  handleAddress(defaultAddressID)
                 }
                 setOpenSelectAddress(false)
               }}
@@ -1095,6 +1097,7 @@ const Head = () => {
           </div>
         </div>
       </Rodal>
+      {/* DELETE ADDRESS MODAL */}
       <Rodal
         height={200}
         width={mobileMode ? 350 : 400}
@@ -1171,8 +1174,8 @@ const Head = () => {
                 ) {
                   deleteAddressBuilding(Number(cloneIdDeleteAddress))
                     .then((res) => {
-                      if (cloneIdDeleteAddress == defaulAddressID) {
-                        setDefaulAddressID(undefined)
+                      if (cloneIdDeleteAddress == defaultAddressID) {
+                        setDefaultAddressID(undefined)
                       }
                       handleGetAccountBuilding()
                     })

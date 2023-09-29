@@ -53,8 +53,9 @@ const HomePage = ({ productItems, shopItems }) => {
   const [isLoadingProduct, setIsLoadingProduct] = useState(false)
   const [listStore, setListStore] = useState([])
   let history = useHistory()
-  const [filtter, setFilter] = useState(CATE_FITLER)
-  const settingCaategory = {
+  const [filter, setFilter] = useState(CATE_FITLER)
+
+  const settingCategory = {
     dots: true,
     infinite: false,
     slidesToShow: menuCategory?.length <= 6 ? menuCategory?.length : 6,
@@ -82,6 +83,7 @@ const HomePage = ({ productItems, shopItems }) => {
       },
     ],
   }
+
   const settingBanner = {
     dots: !mobileMode,
     infinite: true,
@@ -93,11 +95,12 @@ const HomePage = ({ productItems, shopItems }) => {
       return <ul style={{ margin: '0px' }}>{dots}</ul>
     },
   }
-  const hanldeViewAll = (cateId, categoryName) => {
+
+  const handleViewAll = (cateId, categoryName) => {
     // if (userInfo.building && userInfo.fullName && userInfo.phone) {
     setMode('2')
-    // history.push(`/mode/${mode}/${filtter}/${cateId}`, {
-    history.push(`/mode/2/${filtter}/${cateId}`, {
+    // history.push(`/mode/${mode}/${filter}/${cateId}`, {
+    history.push(`/mode/2/${filter}/${cateId}`, {
       categoryName: categoryName,
     })
     // } else {
@@ -106,48 +109,52 @@ const HomePage = ({ productItems, shopItems }) => {
   }
 
   // cho cate
-  const getMenu = (menu, filtter, pageInd, size) => {
-    getMenuByModeGroupBy(menu, filtter, pageInd, size)
-      .then((res) => {
-        if (res.data) {
-          const menu = res.data
-          // setMenuIdProvider(menu.id);
-          setMenuCategory([
-            ...menu.listCategoryStoreInMenus,
-            {
-              id: '999',
-              name: 'Xem theem',
-              image: '/images/load_more_icon.png',
-            },
-          ])
-        } else {
+  const getMenu = (menu, filter, pageInd, size) => {
+    if (area) {
+      getMenuByModeGroupBy(menu, filter, pageInd, size)
+        .then((res) => {
+          if (res.data) {
+            const menu = res.data
+            // setMenuIdProvider(menu.id);
+            setMenuCategory([
+              ...menu.listCategoryStoreInMenus,
+              {
+                id: '999',
+                name: 'Xem theem',
+                image: '/images/load_more_icon.png',
+              },
+            ])
+          } else {
+            setMenuCategory([])
+          }
+          setIsLoadingPage(false)
+          setIsLoadingProduct(false)
+        })
+        .catch((error) => {
+          console.log(error)
           setMenuCategory([])
-        }
-        setIsLoadingPage(false)
-        setIsLoadingProduct(false)
-      })
-      .catch((error) => {
-        console.log(error)
-        setMenuCategory([])
-      })
-    getListStoreInMenuByMode(1, 1, 8, area.value).then((rs) => {
-      if (rs.data) {
-        setListStore(rs.data)
-      }
-    })
-    // get menu by mode 2 De lay cai Menuprovider cho mon ngon gan ban
+        })
 
-    getMenuByMode(mode).then((rs) => {
-      const menu = rs.data
-      setMenuIdProvider(menu.id)
-    })
+      getListStoreInMenuByMode(1, 1, 8, area.value).then((rs) => {
+        if (rs.data) {
+          setListStore(rs.data)
+        }
+      })
+      // get menu by mode 2 De lay cai Menuprovider cho mon ngon gan ban
+
+      getMenuByMode(mode, area.value).then((rs) => {
+        const menu = rs.data
+        setMenuIdProvider(menu.id)
+      })
+    }
   }
 
-  //// cho mon ngon gan ban
+  // cho mon ngon gan ban
   useEffect(() => {
     // son
-
-    getMenu('2', filtter, 1, 7)
+    console.log(area.value)
+    //console.log(mode)
+    getMenu('2', filter, 1, 7)
     setMode('1')
     //s on
     setisLoadigFromHome(false)
@@ -361,7 +368,7 @@ const HomePage = ({ productItems, shopItems }) => {
                 />
               ) : mode !== "3" && menuCategory && menuCategory?.length > 0 ? (
                 <div className="cateogry-menu">
-                  <Slider {...settingCaategory}>
+                  <Slider {...settingCategory}>
                     {menuCategory &&
                       menuCategory.map((cate, index) => {
                         if (index > 6) {
@@ -370,7 +377,7 @@ const HomePage = ({ productItems, shopItems }) => {
                               <div key={index} className="cateogry-menu-wrapper ">
                                 <div
                                   className="cateogry-menu-img"
-                                  // onClick={() => hanldeViewAll(999, "Xem thêm")}
+                                  // onClick={() => handleViewAll(999, "Xem thêm")}
                                 >
                                   <img
                                     src={
@@ -392,7 +399,7 @@ const HomePage = ({ productItems, shopItems }) => {
                               <div
                                 className="cateogry-menu-img"
                                 onClick={() => {
-                                  hanldeViewAll(cate.id, cate.name);
+                                  handleViewAll(cate.id, cate.name);
                                 }}
                               >
                                 <img
@@ -427,7 +434,7 @@ const HomePage = ({ productItems, shopItems }) => {
             listStore.length > 0 === true ? (
               <ShopSlide
                 key={111}
-                filtter={filtter}
+                filter={filter}
                 data={[...listStore] || []}
                 label="Quán ngon gần bạn"
                 cateId="9999"
