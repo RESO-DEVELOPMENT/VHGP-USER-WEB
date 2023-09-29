@@ -312,7 +312,7 @@ export const MenuPage = () => {
   //only mode 2
   const getMenu = (menu, filtter, pageInd, size) => {
     if (menu !== '0') {
-      getMenuByModeGroupBy(menu, filtter, pageInd, size)
+      getMenuByModeGroupBy(menu, filtter, pageInd, size, area.value)
         .then((res) => {
           if (res.data) {
             const menu = res.data
