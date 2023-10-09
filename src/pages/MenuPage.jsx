@@ -27,6 +27,8 @@ import {
   IMAGE_NOTFOUND,
   LOCALSTORAGE_CART_NAME1,
   LOCALSTORAGE_CART_NAME2,
+  LOCALSTORAGE_USER_LOGIN,
+  LOCALSTORAGE_USER_NAME,
   Mdata,
   Mdata2,
   Mdata3,
@@ -49,11 +51,10 @@ export const MenuPage = () => {
     setKeySearch,
     isLoadigFromHome,
     setisLoadigFromHome,
-    area,
   } = useContext(AppContext)
   let date = new Date()
   let timeEnd2 = 15
-  const [filtter, setFilter] = useState(CATE_FITLER)
+  const [filter, setFilter] = useState(CATE_FITLER)
   const [isLoadingPage, setIsLoadingPage] = useState(false)
   const [isLoadingMode2, setIsLoadingMode2] = useState(isLoadigFromHome)
   const [isLoadingProduct, setIsLoadingProduct] = useState(false)
@@ -66,17 +67,19 @@ export const MenuPage = () => {
   const [slideData, setSlideData] = useState([])
   const [menuEmpty, setMenuEmpty] = useState(false)
   const [pageIndex, setPageIndex] = useState(1)
-  const [isFull, setisFull] = useState(false)
+  const [isFull, setIsFull] = useState(false)
   const [timeEndState, setTimeEndState] = useState(timeEnd2)
-  const [result, setReuslt] = useState(1)
+  const [result, setResult] = useState(1)
   const [widthScreen, setWidthScreen] = useState(window.innerWidth - 100)
   let location = useLocation()
   let history = useHistory()
 
+  const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))
+  const area = user?.area?.value
+
   useEffect(() => {
     setIsHeaderOrder(false)
     setKeySearch('')
-
     document.getElementById('main').style.overflow = 'hidden'
     if (mode === '1') {
       if (!isLoadigFromHome) {
@@ -106,7 +109,7 @@ export const MenuPage = () => {
         setIsLoadingMode2(false)
         setIsLoadingProduct(true)
         setIsLoadingPage(true)
-        getMenu(mode, filtter, 1, 100)
+        getMenu(mode, filter, 1, 100)
         document.getElementById('main').style.overflow = 'auto'
       } else {
         setisLoadigFromHome(false)
@@ -115,7 +118,7 @@ export const MenuPage = () => {
           setIsLoadingMode2(false)
           setIsLoadingProduct(true)
           setIsLoadingPage(true)
-          getMenu(mode, filtter, 1, 100)
+          getMenu(mode, filter, 1, 100)
           document.getElementById('main').style.overflow = 'auto'
         }, 1500)
       }
@@ -165,7 +168,7 @@ export const MenuPage = () => {
 
       if (currentHeight >= scrollHeight - 5 && !isFull) {
         setIsLoadingMore(true)
-        getListStoreInMenuByMode('1', pageIndex, 3)
+        getListStoreInMenuByMode('1', pageIndex, 3, area)
           .then((res) => {
             if (res.data) {
               const stores = res.data
@@ -174,7 +177,7 @@ export const MenuPage = () => {
                 setIsLoadingMore(false)
                 setPageIndex(pageIndex + 1)
               } else {
-                setisFull(true)
+                setIsFull(true)
                 setListStore([...listStore, ...stores])
                 setIsLoadingMore(false)
               }
@@ -231,16 +234,17 @@ export const MenuPage = () => {
   const getMenuByModeId = (mode) => {
     if (mode !== '0') {
       Promise.all([
-        getMenuByMode(mode, area.value),
-        getListStoreInMenuByMode(mode, pageIndex, 3, area.value),
-        getListStoreCategory(mode, 5, 8, area.value),
+        getMenuByMode(mode, area),
+        getListStoreInMenuByMode(mode, pageIndex, 3, area),
+        getListStoreCategory(mode, 5, 8, area),
       ])
         .then((res) => {
           console.log(res)
           if (res.length > 0) {
             const menu = res[0].data
             const stores = res[1].data
-
+            console.log(menu.id)
+            // console.log();
             // Các list cửa hàng theo category
             const storesCategory = res[2].data
 
@@ -283,6 +287,7 @@ export const MenuPage = () => {
         })
     }
   }
+
   const getMenuInMode3 = (size) => {
     if (mode !== '0') {
       getMenuMode3(size)
@@ -310,9 +315,9 @@ export const MenuPage = () => {
   }
 
   //only mode 2
-  const getMenu = (menu, filtter, pageInd, size) => {
+  const getMenu = (menu, filter, pageInd, size) => {
     if (menu !== '0') {
-      getMenuByModeGroupBy(menu, filtter, pageInd, size, area.value)
+      getMenuByModeGroupBy(menu, filter, pageInd, size, area)
         .then((res) => {
           if (res.data) {
             const menu = res.data
@@ -363,7 +368,7 @@ export const MenuPage = () => {
     let minus = 60 - date.getMinutes()
     let second = 60 - date.getSeconds()
     let res = hour * 3600 + minus * 60 + second
-    setReuslt(res)
+    setResult(res)
     return () => {}
   }, [date])
 
@@ -386,10 +391,12 @@ export const MenuPage = () => {
       return <ul style={{ margin: '0px' }}>{dots}</ul>
     },
   }
+
   const hanldeReLoad = () => {
-    getMenu(mode, filtter, 1, 100)
+    getMenu(mode, filter, 1, 100)
   }
-  const settingCaategory = {
+
+  const settingCategory = {
     dots: true,
     infinite: false,
     slidesToShow: menuCategory?.length <= 6 ? menuCategory?.length : 6,
@@ -418,7 +425,7 @@ export const MenuPage = () => {
     ],
   }
 
-  const menuTitle = (title, description, isCoundown) => {
+  const menuTitle = (title, description, isCountdown) => {
     return (
       <div className="c_flex" style={{ gap: 3, flexWrap: 'wrap' }}>
         <div
@@ -457,7 +464,7 @@ export const MenuPage = () => {
             {isLoadingPage ? (
               <Skeleton height={23} width={81} borderRadius={3} />
             ) : (
-              isCoundown && (
+              isCountdown && (
                 <div className="">
                   <Countdown
                     renderer={CountDownMenu}
@@ -558,7 +565,7 @@ export const MenuPage = () => {
     }
   }
   const hanldeViewAll = (cateId, categoryName) => {
-    history.push(`/mode/${mode}/${filtter}/${cateId}`, {
+    history.push(`/mode/${mode}/${filter}/${cateId}`, {
       categoryName: categoryName,
     })
   }
@@ -593,7 +600,7 @@ export const MenuPage = () => {
             />
           ) : mode !== '3' && menuCategory && menuCategory?.length > 0 ? (
             <div className="cateogry-menu">
-              <Slider {...settingCaategory}>
+              <Slider {...settingCategory}>
                 {menuCategory &&
                   menuCategory.map((cate, index) => {
                     return (
@@ -621,7 +628,7 @@ export const MenuPage = () => {
           )}
         </div>
 
-        {/* // list store theo category  */}
+        {/* list store theo category  */}
         {!isLoadingPage &&
           !isLoadingProduct &&
           mode === '1' &&
@@ -630,7 +637,7 @@ export const MenuPage = () => {
               return (
                 <ShopSlide
                   key={index}
-                  filtter={filtter}
+                  filter={filter}
                   data={[...menu.listStores] || []}
                   label={menu.name}
                   cateId={menu.id}
@@ -642,7 +649,7 @@ export const MenuPage = () => {
             } else return true
           })}
 
-        {/* // quan ngon gan ban  */}
+        {/*  quan ngon gan ban  */}
         {!isLoadingPage && !isLoadingProduct && mode === '1' && (
           <>
             <div
@@ -687,7 +694,7 @@ export const MenuPage = () => {
               return (
                 <ProductSlide
                   key={index}
-                  filtter={filtter}
+                  filter={filter}
                   data={[...menu.listProducts] || []}
                   label={menu.name}
                   cateId={menu.id}

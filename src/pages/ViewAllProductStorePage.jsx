@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import { getListProductByStoreId, getMenuByMode } from "../apis/apiService";
-import Loading from "../common/Loading/Loading";
-import { ProductList } from "../components/products/ProductList";
-import { AppContext } from "../context/AppProvider";
+import React, { useContext, useEffect, useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
+import { getListProductByStoreId, getMenuByMode } from '../apis/apiService'
+import Loading from '../common/Loading/Loading'
+import { ProductList } from '../components/products/ProductList'
+import { AppContext } from '../context/AppProvider'
+import { LOCALSTORAGE_USER_NAME } from '../constants/Variable'
 
 export const ViewAllProductStorePage = () => {
   const {
@@ -14,100 +15,102 @@ export const ViewAllProductStorePage = () => {
     mode,
     deliveryDate,
     setMenuIdProvider,
-  } = useContext(AppContext);
-  const [isLoadingCircle, setIsLoadingCircle] = useState(true);
-  const [products, setProducts] = useState(null);
-  const [title, setTitle] = useState("");
-  const [building, setBuilding] = useState("");
-  const [storeDes, setStoreDes] = useState("");
-  const [openTime, setOpenTime] = useState("");
-  const [closeTime, setCloseTime] = useState("");
-  const [img, setImg] = useState("");
-  let location = useLocation();
-  let history = useHistory();
-  let modeId = location.pathname.trim().split("/")[2];
-  console.log("modeId", modeId);
-  getMenuByMode(modeId).then((rs) => {
-    const menu = rs.data;
-    setMenuIdProvider(menu.id);
-    console.log("Menu", menu.id);
-  });
+  } = useContext(AppContext)
+  const [isLoadingCircle, setIsLoadingCircle] = useState(true)
+  const [products, setProducts] = useState(null)
+  const [title, setTitle] = useState('')
+  const [building, setBuilding] = useState('')
+  const [storeDes, setStoreDes] = useState('')
+  const [openTime, setOpenTime] = useState('')
+  const [closeTime, setCloseTime] = useState('')
+  const [img, setImg] = useState('')
+  let location = useLocation()
+  let history = useHistory()
+  let modeId = location.pathname.trim().split('/')[2]
+
+  const user = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER_NAME))
+  const area = user.area.value
+
+  getMenuByMode(modeId, area).then((rs) => {
+    const menu = rs.data
+    setMenuIdProvider(menu.id)
+  })
+
   useEffect(() => {
-    console.log(menuIdProvider);
-    let storeId = location.pathname.trim().split("/")[4];
-    console.log(storeId);
-    setIsLoadingCircle(true);
+    let storeId = location.pathname.trim().split('/')[4]
+    setIsLoadingCircle(true)
     getListProductByStoreId(menuIdProvider, storeId, 1, 100)
       .then((res) => {
+        console.log(res)
         if (res.data) {
-          const category = res.data;
-          const productList = category.listProducts || [];
-          const title = category.name;
-          setTitle(title);
-          setStoreDes(category.description);
-          const image = category.image;
-          setImg(image);
-          setBuilding(category.location);
-          setCloseTime(category.closeTime);
-          setOpenTime(category.openTime);
-          setProducts(productList);
+          const category = res.data
+          const productList = category.listProducts || []
+          const title = category.name
+          setTitle(title)
+          setStoreDes(category.description)
+          const image = category.image
+          setImg(image)
+          setBuilding(category.location)
+          setCloseTime(category.closeTime)
+          setOpenTime(category.openTime)
+          setProducts(productList)
           setHeaderInfo({
             isSearchHeader: false,
-            title: "Chi tiết cửa hàng",
-          });
-          setIsLoadingCircle(false);
+            title: 'Chi tiết cửa hàng',
+          })
+          setIsLoadingCircle(false)
         } else {
-          setIsLoadingCircle(false);
+          setIsLoadingCircle(false)
         }
       })
       .catch((error) => {
-        console.log(error);
-        setIsLoadingCircle(false);
-        setProducts([]);
-      });
+        console.log(error)
+        setIsLoadingCircle(false)
+        setProducts([])
+      })
     return () => {
-      setIsLoadingCircle(false);
-    };
-  }, [history, location.pathname, menuIdProvider, setHeaderInfo]);
+      setIsLoadingCircle(false)
+    }
+  }, [history, location.pathname, menuIdProvider, setHeaderInfo])
 
   useEffect(() => {
     if (!isLoadingCircle) {
-      document.body.style.overflow = "auto";
-      document.body.style.touchAction = "auto";
+      document.body.style.overflow = 'auto'
+      document.body.style.touchAction = 'auto'
     } else {
-      document.body.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
+      document.body.style.overflow = 'hidden'
+      document.body.style.touchAction = 'none'
     }
 
-    return () => {};
-  }, [isLoadingCircle]);
+    return () => {}
+  }, [isLoadingCircle])
   return (
     <div>
       <Loading isLoading={isLoadingCircle} />
       <div
-        className={`loading-spin ${!isLoadingCircle && "loading-spin-done"}`}
+        className={`loading-spin ${!isLoadingCircle && 'loading-spin-done'}`}
       ></div>
       <div
         className="store-wrapper"
-        style={{ height: storeDes !== null && storeDes !== "" ? 500 : 450 }}
+        style={{ height: storeDes !== null && storeDes !== '' ? 500 : 450 }}
       >
         <div
           className="store-image-background"
           style={{
-            height: "500px",
+            height: '500px',
 
             backgroundImage:
-              img !== ""
+              img !== ''
                 ? `url(${img})`
                 : `url(https://cdn-icons-png.flaticon.com/512/123/123403.png)`,
           }}
         >
           <div
             className="store-name"
-            style={{ display: img === "" ? "none" : null }}
+            style={{ display: img === '' ? 'none' : null }}
           >
             <h3 style={{ paddingBottom: 0 }}> {title}</h3>
-            {storeDes !== null && storeDes !== "" ? (
+            {storeDes !== null && storeDes !== '' ? (
               <span
                 className="store-building max-line-2"
                 style={{ ppaddingBottom: 5, lineHeight: 1.5 }}
@@ -115,33 +118,33 @@ export const ViewAllProductStorePage = () => {
                 {storeDes}
               </span>
             ) : (
-              ""
+              ''
             )}
 
             <span className="store-building" style={{ paddingTop: 5 }}>
               <i
                 className="fa-solid fa-location-dot"
-                style={{ color: "var(--primary)", paddingRight: 7 }}
+                style={{ color: 'var(--primary)', paddingRight: 7 }}
               ></i>
               <span>{building}</span>
             </span>
             <span className="store-building" style={{}}>
               <i
                 className="fa-regular fa-clock"
-                style={{ color: "var(--primary)", paddingRight: 7 }}
+                style={{ color: 'var(--primary)', paddingRight: 7 }}
               ></i>
               <span>
                 Giờ mở cửa: {openTime} | Giờ đóng cửa: {closeTime}
               </span>
             </span>
 
-            <span className="store-building" style={{ color: "green" }}>
+            <span className="store-building" style={{ color: 'green' }}>
               <i
                 className="fa-solid fa-clock-rotate-left"
-                style={{ color: "green", paddingRight: 7 }}
+                style={{ color: 'green', paddingRight: 7 }}
               ></i>
               <span>
-                {mode === "3" ? `Ngày giao hàng: ${deliveryDate}` : modeType}
+                {mode === '3' ? `Ngày giao hàng: ${deliveryDate}` : modeType}
               </span>
             </span>
           </div>
@@ -151,17 +154,17 @@ export const ViewAllProductStorePage = () => {
         <ProductList
           data={[...products] || []}
           filter={2}
-          packDes={mode !== "1"}
+          packDes={mode !== '1'}
           reLoad={() => {}}
           menuName={deliveryDate}
         />
       )}
       {products?.length === 0 && (
-        <section className="shop" style={{ padding: "25px 0 40px 0" }}>
+        <section className="shop" style={{ padding: '25px 0 40px 0' }}>
           <div className="container center_flex">
             <div
               className="contentWidth  center_flex"
-              style={{ marginLeft: 0, flexDirection: "column", gap: 10 }}
+              style={{ marginLeft: 0, flexDirection: 'column', gap: 10 }}
             >
               <img
                 src="/images/empty-food.png"
@@ -169,21 +172,21 @@ export const ViewAllProductStorePage = () => {
                 alt=""
               />
               <span style={{ fontSize: mobileMode ? 16 : 20, fontWeight: 600 }}>
-                {img === ""
-                  ? "Không tìm thấy cửa hàng"
-                  : "Không có sản phẩm nào!"}
+                {img === ''
+                  ? 'Không tìm thấy cửa hàng'
+                  : 'Không có sản phẩm nào!'}
               </span>
               <span
                 style={{
                   fontSize: mobileMode ? 14 : 16,
-                  fontWeight: "lighter",
-                  textAlign: "center",
-                  padding: "0 50px",
+                  fontWeight: 'lighter',
+                  textAlign: 'center',
+                  padding: '0 50px',
                 }}
               >
-                {img === ""
-                  ? "Hiện không tìm thấy cửa hàng, Bạn vui lòng quay lại vào lúc khác."
-                  : "Hiện không có sản phẩm nào, Bạn vui lòng quay lại vào lúc khác."}
+                {img === ''
+                  ? 'Hiện không tìm thấy cửa hàng, Bạn vui lòng quay lại vào lúc khác.'
+                  : 'Hiện không có sản phẩm nào, Bạn vui lòng quay lại vào lúc khác.'}
               </span>
             </div>
           </div>
@@ -191,5 +194,5 @@ export const ViewAllProductStorePage = () => {
       )}
       {/* {!isLoadingCircle && <ProductGrid data={products || []} label={title || ""} cateId={""} labelImg={img || IMAGE_NOTFOUND} isViewAll={false} />} */}
     </div>
-  );
-};
+  )
+}
