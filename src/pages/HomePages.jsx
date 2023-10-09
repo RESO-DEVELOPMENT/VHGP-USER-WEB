@@ -29,6 +29,7 @@ import {
   Mdata2,
   Mdata3,
 } from '../constants/Variable'
+import ShopList from '../components/shop/ShopList'
 const HomePage = ({ productItems, shopItems }) => {
   const {
     userInfo,
@@ -111,7 +112,7 @@ const HomePage = ({ productItems, shopItems }) => {
   // cho cate
   const getMenu = (menu, filter, pageInd, size) => {
     if (area) {
-      getMenuByModeGroupBy(menu, filter, pageInd, size)
+      getMenuByModeGroupBy(menu, filter, pageInd, size, area.value)
         .then((res) => {
           if (res.data) {
             const menu = res.data
@@ -151,7 +152,7 @@ const HomePage = ({ productItems, shopItems }) => {
 
   // cho mon ngon gan ban
   useEffect(() => {
-    // son
+    // s on
     console.log(area.value)
     //console.log(mode)
     getMenu('2', filter, 1, 7)
@@ -278,7 +279,7 @@ const HomePage = ({ productItems, shopItems }) => {
           </div>
 
           {/* SLIDER BANNER */}
-          <section
+          {/* <section
             className="TopCate"
             style={{
               width: '100%',
@@ -327,7 +328,7 @@ const HomePage = ({ productItems, shopItems }) => {
                 })}
               </Slider>
             </div>
-          </section>
+          </section> */}
 
           {/* <section className="TopCate  " style={{ width: "100%" }}>
                         <div className="container" style={{ padding: 0 }}>
@@ -423,8 +424,8 @@ const HomePage = ({ productItems, shopItems }) => {
               )}
             </div> */}
 
-          {/* QUAN NGON GAN BAN  */}
-          <div
+          {/* QUAN NGON GAN BAN (VERTICAL) */}
+          {/* <div
             className="preview_store_mode_2"
             style={{ marginTop: '20px' }}
             onClick={() => {}}
@@ -443,7 +444,36 @@ const HomePage = ({ productItems, shopItems }) => {
             ) : (
               <></>
             )}
-          </div>
+          </div> */}
+
+          {/* QUAN NGON GAN BAN (HORIZONTAL) */}
+          {!isLoadingPage && !isLoadingProduct && (
+            <>
+              <div
+                className="container-padding f_flex"
+                style={{
+                  alignItems: 'end',
+                  display: listStore.length > 0 ? 'flex' : 'none',
+                }}
+              >
+                <span
+                  style={{
+                    padding: '40px 15px 10px 15px',
+                    fontWeight: 700,
+                    fontSize: 16,
+                    color: 'rgb(100, 100, 100)',
+                  }}
+                >
+                  Quán ngon gần bạn
+                </span>
+              </div>
+              <ShopList
+                data={listStore?.length > 0 && [...listStore]}
+                isStore={true}
+                tabActive={0}
+              />
+            </>
+          )}
         </section>
       </div>
     </>
